@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📄 Tesseract OCR - Yerel PDF Sayfa OCR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .settings {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .setting-group label {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .setting-group select {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #2a2a4a;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .drop-zone {
+            border: 3px dashed #4a4a6a;
+            border-radius: 16px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.02);
+            margin-bottom: 20px;
+        }
+
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: #7c3aed;
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        .drop-zone-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .drop-zone-text {
+            font-size: 1.1rem;
+            color: #aaa;
+        }
+
+        .drop-zone-hint {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .file-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .file-card:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .file-card.processing {
+            border-color: #f59e0b;
+            animation: pulse 1.5s infinite;
+        }
+
+        .file-card.success {
+            border-color: #10b981;
+        }
+
+        .file-card.error {
+            border-color: #ef4444;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .file-number {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: #7c3aed;
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .file-preview {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #2a2a4a;
+        }
+
+        .file-name {
+            font-size: 0.75rem;
+            color: #aaa;
+            word-break: break-all;
+            line-height: 1.3;
+            max-height: 50px;
+            overflow: hidden;
+        }
+
+        .file-status {
+            margin-top: 8px;
+            font-size: 1.2rem;
+        }
+
+        .file-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(239, 68, 68, 0.8);
+            border: none;
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .file-card:hover .file-remove {
+            opacity: 1;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            color: #fff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .progress-section.active {
+            display: block;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #7c3aed, #10b981);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-details {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .log-section {
+            background: #0d0d1a;
+            border-radius: 12px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+        }
+
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .log-entry.error {
+            color: #ef4444;
+        }
+
+        .log-entry.success {
+            color: #10b981;
+        }
+
+        .log-entry.info {
+            color: #3b82f6;
+        }
+
+        .log-time {
+            color: #666;
+            margin-right: 10px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #7c3aed;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid #f59e0b;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .warning-box strong {
+            color: #f59e0b;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: #7c3aed;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .files-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div id="loadingText">Tesseract.js yükleniyor...</div>
+    </div>
+
+    <div class="container">
+        <h1>📄 Tesseract OCR</h1>
+        <p class="subtitle">Yerel OCR - API gerektirmez, tamamen tarayıcıda çalışır</p>
+
+        <div class="warning-box">
+            <strong>⚠️ İlk Kullanım:</strong> Dil paketi (~15MB) ilk OCR işleminde indirilecek. 
+            Sonraki kullanımlarda önbellekten yüklenir. Her sayfa 5-15 saniye sürebilir.
+        </div>
+
+        <div class="settings">
+            <div class="setting-group">
+                <label>🌐 OCR Dili</label>
+                <select id="langSelect">
+                    <option value="tur" selected>Türkçe</option>
+                    <option value="eng">English</option>
+                    <option value="tur+eng">Türkçe + English</option>
+                    <option value="deu">Deutsch</option>
+                    <option value="fra">Français</option>
+                    <option value="ara">العربية</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label>📊 Çıktı Formatı</label>
+                <select id="outputFormat">
+                    <option value="txt" selected>TXT (Düz Metin)</option>
+                    <option value="json">JSON (Yapılandırılmış)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="drop-zone" id="dropZone">
+            <div class="drop-zone-icon">🖼️</div>
+            <div class="drop-zone-text">PDF sayfalarının resimlerini buraya sürükleyin</div>
+            <div class="drop-zone-text">veya tıklayarak seçin</div>
+            <div class="drop-zone-hint">💡 Shift ile çoklu seçimde sıralı numaralandırma yapılır</div>
+        </div>
+        <input type="file" id="fileInput" class="file-input" multiple accept="image/*">
+
+        <div class="files-grid" id="filesGrid"></div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="startBtn" disabled>
+                🚀 OCR Başlat
+            </button>
+            <button class="btn btn-secondary" id="clearBtn" disabled>
+                🗑️ Temizle
+            </button>
+            <button class="btn btn-success" id="downloadBtn" disabled>
+                💾 Sonuçları İndir
+            </button>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-header">
+                <span id="progressText">Hazırlanıyor...</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-details">
+                <span>⏱️ Geçen: <span id="elapsedTime">00:00</span></span>
+                <span>📄 İşlenen: <span id="processedCount">0</span> / <span id="totalCount">0</span></span>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="successCount">0</div>
+                    <div class="stat-label">✅ Başarılı</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="errorCount">0</div>
+                    <div class="stat-label">❌ Hatalı</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="avgTime">0s</div>
+                    <div class="stat-label">⚡ Ort. Süre</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="log-section" id="logSection"></div>
+    </div>
+
+    <script>
+        // CDN listesi - sırayla denenecek
+        const cdnList = [
+            'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js',
+            'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
+            'https://unpkg.com/tesseract.js@5.1.1/dist/tesseract.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.4/tesseract.min.js',
+            'https://cdn.jsdelivr.net/npm/tesseract.js@4.1.4/dist/tesseract.min.js'
+        ];
+
+        function loadScript(url) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = url;
+                script.onload = () => {
+                    // Kısa bir gecikme ile Tesseract'ın yüklenmesini bekle
+                    setTimeout(() => {
+                        if (typeof Tesseract !== 'undefined') {
+                            resolve();
+                        } else {
+                            reject(new Error('Tesseract not defined after load'));
+                        }
+                    }, 100);
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        async function loadTesseract() {
+            const overlay = document.getElementById('loadingOverlay');
+            const loadingText = document.getElementById('loadingText');
+            
+            for (let i = 0; i < cdnList.length; i++) {
+                try {
+                    loadingText.textContent = `CDN deneniyor (${i + 1}/${cdnList.length})...`;
+                    console.log(`CDN deneniyor: ${cdnList[i]}`);
+                    
+                    await loadScript(cdnList[i]);
+                    
+                    if (typeof Tesseract !== 'undefined') {
+                        console.log('✅ Tesseract başarıyla yüklendi:', cdnList[i]);
+                        overlay.classList.add('hidden');
+                        initApp();
+                        return;
+                    }
+                } catch (e) {
+                    console.log(`❌ CDN başarısız: ${cdnList[i]}`, e.message);
+                }
+            }
+            
+            // Hiçbiri çalışmazsa
+            overlay.innerHTML = `
+                <div style="color: #ef4444; text-align: center; padding: 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">❌</div>
+                    <div style="font-size: 1.2rem; margin-bottom: 10px;">Tesseract.js yüklenemedi!</div>
+                    <div style="color: #888; margin-bottom: 20px;">Tüm CDN'ler denendi ama başarısız oldu.</div>
+                    <div style="color: #aaa; font-size: 0.9rem;">
+                        Olası çözümler:<br>
+                        1. İnternet bağlantınızı kontrol edin<br>
+                        2. VPN kullanıyorsanız kapatın<br>
+                        3. Tarayıcı önbelleğini temizleyin<br>
+                        4. Farklı bir tarayıcı deneyin
+                    </div>
+                    <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 30px; background: #7c3aed; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem;">
+                        🔄 Sayfayı Yenile
+                    </button>
+                </div>
+            `;
+        }
+
+        // Sayfa yüklendiğinde Tesseract'ı yükle
+        document.addEventListener('DOMContentLoaded', loadTesseract);
+
+        function initApp() {
+            // State
+            let files = [];
+            let results = [];
+            let isProcessing = false;
+            let startTime = null;
+
+            // DOM Elements
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+            const filesGrid = document.getElementById('filesGrid');
+            const startBtn = document.getElementById('startBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const progressSection = document.getElementById('progressSection');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const progressPercent = document.getElementById('progressPercent');
+            const logSection = document.getElementById('logSection');
+            const langSelect = document.getElementById('langSelect');
+            const outputFormat = document.getElementById('outputFormat');
+
+            // Event Listeners
+            dropZone.addEventListener('click', () => fileInput.click());
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+            startBtn.addEventListener('click', startOCR);
+            clearBtn.addEventListener('click', clearAll);
+            downloadBtn.addEventListener('click', downloadResults);
+
+            // Handle file selection
+            function handleFiles(fileList) {
+                const newFiles = Array.from(fileList)
+                    .filter(f => f.type.startsWith('image/'))
+                    .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+                if (newFiles.length === 0) {
+                    log('⚠️ Geçerli resim dosyası bulunamadı', 'error');
+                    return;
+                }
+
+                files = [...files, ...newFiles];
+                log(`📁 ${newFiles.length} dosya eklendi (Toplam: ${files.length})`, 'info');
+                renderFiles();
+                updateButtons();
+            }
+
+            // Render file cards
+            function renderFiles() {
+                filesGrid.innerHTML = files.map((file, index) => {
+                    const status = file.status || 'waiting';
+                    const statusEmoji = {
+                        'waiting': '⏳ Bekliyor',
+                        'processing': '🔄 İşleniyor',
+                        'success': '✅ Tamamlandı',
+                        'error': '❌ Hata'
+                    }[status];
+
+                    return `
+                        <div class="file-card ${status}" id="card-${index}">
+                            <div class="file-number">${index + 1}</div>
+                            <button class="file-remove" onclick="window.removeFile(${index})">✕</button>
+                            <img class="file-preview" src="${URL.createObjectURL(file)}" alt="${file.name}">
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-status">${statusEmoji}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Remove single file - global scope için
+            window.removeFile = function(index) {
+                if (isProcessing) return;
+                files.splice(index, 1);
+                results.splice(index, 1);
+                renderFiles();
+                updateButtons();
+                log(`🗑️ Dosya kaldırıldı`, 'info');
+            };
+
+            // Update button states
+            function updateButtons() {
+                startBtn.disabled = files.length === 0 || isProcessing;
+                clearBtn.disabled = files.length === 0 || isProcessing;
+                downloadBtn.disabled = results.filter(r => r).length === 0;
+            }
+
+            // Clear all
+            function clearAll() {
+                if (isProcessing) return;
+                files = [];
+                results = [];
+                filesGrid.innerHTML = '';
+                progressSection.classList.remove('active');
+                updateButtons();
+                log('🧹 Tüm dosyalar temizlendi', 'info');
+            }
+
+            // Log function
+            function log(message, type = '') {
+                const time = new Date().toLocaleTimeString('tr-TR');
+                const entry = document.createElement('div');
+                entry.className = `log-entry ${type}`;
+                entry.innerHTML = `<span class="log-time">[${time}]</span>${message}`;
+                logSection.appendChild(entry);
+                logSection.scrollTop = logSection.scrollHeight;
+            }
+
+            // Update progress
+            function updateProgress(current, total, text) {
+                const percent = Math.round((current / total) * 100);
+                progressBar.style.width = `${percent}%`;
+                progressPercent.textContent = `${percent}%`;
+                progressText.textContent = text;
+                document.getElementById('processedCount').textContent = current;
+                document.getElementById('totalCount').textContent = total;
+
+                if (startTime) {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                    const secs = (elapsed % 60).toString().padStart(2, '0');
+                    document.getElementById('elapsedTime').textContent = `${mins}:${secs}`;
+                }
+            }
+
+            // Update stats
+            function updateStats(successCount, errorCount, avgTime) {
+                document.getElementById('successCount').textContent = successCount;
+                document.getElementById('errorCount').textContent = errorCount;
+                document.getElementById('avgTime').textContent = `${avgTime.toFixed(1)}s`;
+            }
+
+            // Start OCR
+            async function startOCR() {
+                if (files.length === 0 || isProcessing) return;
+
+                isProcessing = true;
+                startTime = Date.now();
+                results = new Array(files.length).fill(null);
+                
+                progressSection.classList.add('active');
+                updateButtons();
+                
+                const lang = langSelect.value;
+                log(`🚀 OCR başlatılıyor (Dil: ${lang})`, 'info');
+                log(`📄 Toplam ${files.length} dosya işlenecek`, 'info');
+
+                let successCount = 0;
+                let errorCount = 0;
+                let totalTime = 0;
+                let worker = null;
+
+                // Initialize Tesseract worker
+                try {
+                    log('⏳ Tesseract worker başlatılıyor (dil paketi indiriliyor)...', 'info');
+                    
+                    worker = await Tesseract.createWorker(lang, 1, {
+                        logger: m => {
+                            if (m.status === 'loading tesseract core') {
+                                progressText.textContent = 'Tesseract core yükleniyor...';
+                            } else if (m.status === 'loading language traineddata') {
+                                progressText.textContent = `Dil paketi indiriliyor: ${Math.round(m.progress * 100)}%`;
+                            } else if (m.status === 'recognizing text') {
+                                const pageProgress = Math.round(m.progress * 100);
+                                progressText.textContent = `Sayfa analiz ediliyor: ${pageProgress}%`;
+                            }
+                        }
+                    });
+                    
+                    log('✅ Tesseract hazır', 'success');
+                } catch (err) {
+                    log(`❌ Tesseract başlatılamadı: ${err.message}`, 'error');
+                    isProcessing = false;
+                    updateButtons();
+                    return;
+                }
+
+                // Process each file
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const pageStart = Date.now();
+
+                    files[i].status = 'processing';
+                    renderFiles();
+                    updateProgress(i, files.length, `Sayfa ${i + 1} işleniyor: ${file.name}`);
+                    log(`📄 Sayfa ${i + 1} işleniyor: ${file.name}`, 'info');
+
+                    try {
+                        const { data } = await worker.recognize(file);
+                        
+                        results[i] = {
+                            page: i + 1,
+                            filename: file.name,
+                            text: data.text,
+                            confidence: data.confidence
+                        };
+
+                        files[i].status = 'success';
+                        successCount++;
+                        
+                        const pageTime = (Date.now() - pageStart) / 1000;
+                        totalTime += pageTime;
+                        
+                        log(`✅ Sayfa ${i + 1} tamamlandı (${pageTime.toFixed(1)}s, güven: ${data.confidence.toFixed(1)}%)`, 'success');
+                    } catch (err) {
+                        files[i].status = 'error';
+                        errorCount++;
+                        results[i] = {
+                            page: i + 1,
+                            filename: file.name,
+                            text: '',
+                            error: err.message
+                        };
+                        log(`❌ Sayfa ${i + 1} hata: ${err.message}`, 'error');
+                    }
+
+                    renderFiles();
+                    updateStats(successCount, errorCount, successCount > 0 ? totalTime / successCount : 0);
+                    updateProgress(i + 1, files.length, `${i + 1}/${files.length} tamamlandı`);
+                }
+
+                // Cleanup
+                await worker.terminate();
+
+                isProcessing = false;
+                updateButtons();
+
+                const totalElapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+                log(`🎉 OCR tamamlandı! (${successCount} başarılı, ${errorCount} hatalı, ${totalElapsed}s)`, 'success');
+            }
+
+            // Download results
+            function downloadResults() {
+                const format = outputFormat.value;
+                const validResults = results.filter(r => r && r.text);
+
+                if (validResults.length === 0) {
+                    log('⚠️ İndirilecek sonuç yok', 'error');
+                    return;
+                }
+
+                let content, filename, mimeType;
+
+                if (format === 'json') {
+                    content = JSON.stringify(results, null, 2);
+                    filename = 'ocr-sonuclari.json';
+                    mimeType = 'application/json';
+                } else {
+                    content = results
+                        .filter(r => r)
+                        .map(r => {
+                            const header = `\n${'='.repeat(60)}\n📄 SAYFA ${r.page}: ${r.filename}\n${'='.repeat(60)}\n`;
+                            if (r.error) {
+                                return header + `[HATA: ${r.error}]\n`;
+                            }
+                            return header + r.text;
+                        })
+                        .join('\n');
+                    filename = 'ocr-sonuclari.txt';
+                    mimeType = 'text/plain';
+                }
+
+                const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                log(`💾 Sonuçlar indirildi: ${filename}`, 'success');
+            }
+
+            // Initial log
+            log('✅ Tesseract.js yüklendi', 'success');
+            log('👋 Dosyalarınızı yükleyin ve OCR başlatın.', 'info');
+        }
+    </script>
+</body>
+</html>

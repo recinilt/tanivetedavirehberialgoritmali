@@ -1,0 +1,975 @@
+{
+  "meta": {
+    "versiyon": "1.0",
+    "kaynak": "T.C. Sağlık Bakanlığı 1. Basamak Tanı Tedavi Rehberi 2003",
+    "dosya": "3/3 - Tamamlayıcı Bölüm",
+    "guncelleme_tarihi": "2026-01-24",
+    "aciklama": "H066 devamı, Gebelik İzlemi, Çocuk Sağlığı, Aile Planlaması, Yaşlı Sağlığı ve alt tip hastalıklar"
+  },
+  "hastaliklar": [
+    {
+      "id": "H066_devam",
+      "ad": "Varisler (Alt Ekstremite) - DEVAM",
+      "kategori": "Diğer",
+      "alt_grup": null,
+      "yas_araligi": {"min": 25, "max": 70},
+      "cinsiyet": "kadin",
+      "acil_sevk": false,
+      "ayirici_tanilar": ["Derin ven trombozu", "Lenfödemi", "Selülit", "Lipoderm atoskleroz"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Kompresyon çorabı", "doz": "Gündüz sürekli", "sure": "Sürekli"},
+          {"ad": "Bacak elevasyonu", "doz": "Günde birkaç kez", "sure": "Sürekli"},
+          {"ad": "Diosmin+Hesperidin", "doz": "1000 mg/gün", "sure": "3-6 ay"},
+          {"ad": "Skleroterapi/Cerrahi", "doz": "-", "sure": "İleri olgularda"}
+        ],
+        "sevk_gerekli": false,
+        "sevk_kosullari": [
+          "Venöz ülser",
+          "Tromboflebit",
+          "Cerrahi değerlendirme",
+          "Kronik venöz yetmezlik"
+        ]
+      }
+    },
+    {
+      "id": "H007a",
+      "ad": "Kararlı Anjina Pektoris",
+      "kategori": "Kardiyovasküler",
+      "alt_grup": "Anjina Pektoris",
+      "yas_araligi": {"min": 40, "max": 99},
+      "cinsiyet": "erkek",
+      "acil_sevk": false,
+      "semptomlar": [
+        {"id": "S009", "ad": "Göğüs ağrısı", "agirlik": 0.95, "patognomonik": true},
+        {"id": "S008", "ad": "Nefes darlığı", "agirlik": 0.70, "patognomonik": false},
+        {"id": "S126", "ad": "Sol kol ağrısı", "agirlik": 0.75, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B287", "ad": "Eforla ortaya çıkan ağrı", "agirlik": 0.95},
+        {"id": "B288", "ad": "İstirahatle 5-15 dk'da geçen ağrı", "agirlik": 0.90},
+        {"id": "B289", "ad": "Nitrogliserin ile rahatlama", "agirlik": 0.90},
+        {"id": "B290", "ad": "Öngörülebilir eşik", "agirlik": 0.85}
+      ],
+      "tahliller": [
+        {"id": "T055", "ad": "EKG", "beklenen": "Normal veya ST-T değişiklikleri"},
+        {"id": "T112", "ad": "Efor testi", "beklenen": "İskemi bulguları"}
+      ],
+      "ayirici_tanilar": ["Kararsız anjina", "MI", "GÖRH", "Kas-iskelet ağrısı", "Anksiyete"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "İzosorbid dinitrat SL", "doz": "5 mg atak sırasında", "sure": "Gerektiğinde"},
+          {"ad": "Aspirin", "doz": "100 mg/gün", "sure": "Sürekli"},
+          {"ad": "Metoprolol", "doz": "50-100 mg 2x/gün", "sure": "Sürekli"},
+          {"ad": "Atorvastatin", "doz": "20-40 mg/gün", "sure": "Sürekli"}
+        ],
+        "sevk_gerekli": false,
+        "sevk_kosullari": [
+          "Semptom kötüleşmesi",
+          "Yeni başlayan anjina",
+          "Revaskülarizasyon değerlendirmesi"
+        ]
+      }
+    },
+    {
+      "id": "H007b",
+      "ad": "Kararsız Anjina Pektoris",
+      "kategori": "Kardiyovasküler",
+      "alt_grup": "Anjina Pektoris",
+      "yas_araligi": {"min": 40, "max": 99},
+      "cinsiyet": "erkek",
+      "acil_sevk": true,
+      "semptomlar": [
+        {"id": "S009", "ad": "Göğüs ağrısı", "agirlik": 0.95, "patognomonik": true},
+        {"id": "S008", "ad": "Nefes darlığı", "agirlik": 0.80, "patognomonik": false},
+        {"id": "S047", "ad": "Terleme", "agirlik": 0.75, "patognomonik": false},
+        {"id": "S126", "ad": "Sol kol ağrısı", "agirlik": 0.80, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B291", "ad": "İstirahatte ağrı", "agirlik": 0.95},
+        {"id": "B292", "ad": "Yeni başlayan veya kötüleşen anjina", "agirlik": 0.95},
+        {"id": "B293", "ad": "Uzamış ağrı (>20 dk)", "agirlik": 0.90},
+        {"id": "B294", "ad": "Nitrogliserine yanıtsız", "agirlik": 0.85}
+      ],
+      "tahliller": [
+        {"id": "T055", "ad": "EKG", "beklenen": "ST depresyonu, T negatifliği"},
+        {"id": "T113", "ad": "Troponin", "beklenen": "Normal veya hafif yüksek"}
+      ],
+      "ayirici_tanilar": ["MI", "Aort diseksiyonu", "Pulmoner emboli", "Perikardit"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "ACİL MÜDAHALE GEREKLİ", "doz": "-", "sure": "-"},
+          {"ad": "Aspirin", "doz": "300 mg çiğnenerek", "sure": "Hemen"},
+          {"ad": "Nitrogliserin SL", "doz": "5 dk arayla 3 doz", "sure": "Acil"}
+        ],
+        "sevk_gerekli": true,
+        "sevk_kosullari": [
+          "🚨 ACİL: TÜM OLGULAR ACİL SEVK",
+          "🚨 ACİL: Akut koroner sendrom protokolü",
+          "🚨 ACİL: Ambulans ile nakil"
+        ]
+      }
+    },
+    {
+      "id": "H027a",
+      "ad": "Tip 1 Diabetes Mellitus",
+      "kategori": "Endokrin",
+      "alt_grup": "Diabetes Mellitus",
+      "yas_araligi": {"min": 0, "max": 35},
+      "cinsiyet": "her_iki",
+      "acil_sevk": true,
+      "semptomlar": [
+        {"id": "S064", "ad": "Poliüri", "agirlik": 0.95, "patognomonik": true},
+        {"id": "S065", "ad": "Polidipsi", "agirlik": 0.95, "patognomonik": true},
+        {"id": "S003", "ad": "Kilo kaybı", "agirlik": 0.90, "patognomonik": false},
+        {"id": "S066", "ad": "Polifaji", "agirlik": 0.80, "patognomonik": false},
+        {"id": "S002", "ad": "Halsizlik", "agirlik": 0.75, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B295", "ad": "Genç yaşta başlangıç", "agirlik": 0.90},
+        {"id": "B296", "ad": "Hızlı semptom gelişimi", "agirlik": 0.85},
+        {"id": "B297", "ad": "Zayıf vücut yapısı", "agirlik": 0.75},
+        {"id": "B298", "ad": "Ketoasidoz bulguları olabilir", "agirlik": 0.70}
+      ],
+      "tahliller": [
+        {"id": "T016", "ad": "Açlık kan şekeri", "beklenen": "≥126 mg/dL"},
+        {"id": "T017", "ad": "HbA1c", "beklenen": "≥6.5%"},
+        {"id": "T114", "ad": "C-peptid", "beklenen": "Düşük"},
+        {"id": "T115", "ad": "Anti-GAD antikoru", "beklenen": "Pozitif"},
+        {"id": "T116", "ad": "İdrar ketonu", "beklenen": "Pozitif olabilir"}
+      ],
+      "ayirici_tanilar": ["Tip 2 DM", "LADA", "MODY", "Sekonder DM"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "İnsülin (zorunlu)", "doz": "Bazal-bolus veya pompa", "sure": "Ömür boyu"},
+          {"ad": "Hızlı etkili insülin", "doz": "Yemeklerle", "sure": "Sürekli"},
+          {"ad": "Uzun etkili insülin", "doz": "Gece veya 2x/gün", "sure": "Sürekli"}
+        ],
+        "sevk_gerekli": true,
+        "sevk_kosullari": [
+          "🚨 ACİL: Diyabetik ketoasidoz (DKA)",
+          "🚨 ACİL: Hipoglisemi",
+          "Tüm yeni tanı olgular endokrinolojiye",
+          "İnsülin doz ayarlaması",
+          "Diyabet eğitimi için"
+        ]
+      }
+    },
+    {
+      "id": "H027b",
+      "ad": "Tip 2 Diabetes Mellitus",
+      "kategori": "Endokrin",
+      "alt_grup": "Diabetes Mellitus",
+      "yas_araligi": {"min": 30, "max": 99},
+      "cinsiyet": "her_iki",
+      "acil_sevk": true,
+      "semptomlar": [
+        {"id": "S064", "ad": "Poliüri", "agirlik": 0.85, "patognomonik": false},
+        {"id": "S065", "ad": "Polidipsi", "agirlik": 0.85, "patognomonik": false},
+        {"id": "S002", "ad": "Halsizlik", "agirlik": 0.75, "patognomonik": false},
+        {"id": "S042", "ad": "Görme bulanıklığı", "agirlik": 0.60, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B075", "ad": "Obezite", "agirlik": 0.85},
+        {"id": "B076", "ad": "Akantozis nigrikans", "agirlik": 0.70},
+        {"id": "B077", "ad": "Aile öyküsü", "agirlik": 0.80},
+        {"id": "B299", "ad": "Sinsi başlangıç", "agirlik": 0.75},
+        {"id": "B300", "ad": "Metabolik sendrom bulguları", "agirlik": 0.70}
+      ],
+      "tahliller": [
+        {"id": "T016", "ad": "Açlık kan şekeri", "beklenen": "≥126 mg/dL"},
+        {"id": "T017", "ad": "HbA1c", "beklenen": "≥6.5%"},
+        {"id": "T018", "ad": "OGTT", "beklenen": "2.saat ≥200 mg/dL"},
+        {"id": "T114", "ad": "C-peptid", "beklenen": "Normal veya yüksek"}
+      ],
+      "ayirici_tanilar": ["Tip 1 DM", "LADA", "Stres hiperglisemisi", "İlaç indüklü DM"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Yaşam tarzı değişikliği", "doz": "Diyet + egzersiz", "sure": "Sürekli"},
+          {"ad": "Metformin", "doz": "500-2000 mg/gün", "sure": "Sürekli"},
+          {"ad": "Gliburid/Gliklazid", "doz": "Doza göre", "sure": "Gerekirse"},
+          {"ad": "İnsülin (gerekirse)", "doz": "Titre edilerek", "sure": "Hedef HbA1c sağlanamazsa"}
+        ],
+        "sevk_gerekli": true,
+        "sevk_kosullari": [
+          "🚨 ACİL: Hiperosmolar hiperglisemik sendrom (HHS)",
+          "🚨 ACİL: Hipoglisemi",
+          "Komplikasyon taraması",
+          "Tedaviye yanıtsızlık"
+        ]
+      }
+    },
+    {
+      "id": "H056",
+      "ad": "Gebelik İzlemi",
+      "kategori": "Kadın Hastalıkları",
+      "alt_grup": null,
+      "yas_araligi": {"min": 15, "max": 49},
+      "cinsiyet": "kadin",
+      "acil_sevk": true,
+      "semptomlar": [
+        {"id": "S034", "ad": "Adet gecikmesi", "agirlik": 0.95, "patognomonik": true},
+        {"id": "S014", "ad": "Bulantı", "agirlik": 0.80, "patognomonik": false},
+        {"id": "S015", "ad": "Kusma", "agirlik": 0.70, "patognomonik": false},
+        {"id": "S002", "ad": "Halsizlik", "agirlik": 0.60, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B301", "ad": "Pozitif gebelik testi", "agirlik": 0.99},
+        {"id": "B302", "ad": "Uterus büyümesi", "agirlik": 0.90},
+        {"id": "B303", "ad": "Fetal kalp atımı", "agirlik": 0.95},
+        {"id": "B304", "ad": "Amenore", "agirlik": 0.90}
+      ],
+      "tahliller": [
+        {"id": "T117", "ad": "β-hCG (idrar/kan)", "beklenen": "Pozitif"},
+        {"id": "T001", "ad": "Tam kan sayımı", "beklenen": "Anemi taraması"},
+        {"id": "T044", "ad": "TİT", "beklenen": "Proteinüri/İYE taraması"},
+        {"id": "T050", "ad": "HBsAg", "beklenen": "Hepatit B taraması"},
+        {"id": "T118", "ad": "Kan grubu + Rh", "beklenen": "Rh uyuşmazlığı"},
+        {"id": "T054", "ad": "VDRL", "beklenen": "Sifiliz taraması"},
+        {"id": "T119", "ad": "Rubella IgG", "beklenen": "Bağışıklık durumu"},
+        {"id": "T016", "ad": "Açlık kan şekeri", "beklenen": "Gestasyonel DM taraması"},
+        {"id": "T120", "ad": "Obstetrik USG", "beklenen": "Gebelik doğrulama, tarih"}
+      ],
+      "izlem_programi": {
+        "vizitler": [
+          {"hafta": "İlk başvuru", "islemler": "Öykü, FM, tetkikler, risk değerlendirmesi"},
+          {"hafta": "12. hafta", "islemler": "USG, ense saydamlığı"},
+          {"hafta": "16. hafta", "islemler": "Tetanos aşısı başla"},
+          {"hafta": "20. hafta", "islemler": "Detaylı anomali USG"},
+          {"hafta": "24-28. hafta", "islemler": "OGTT (GDM taraması)"},
+          {"hafta": "28-32. hafta", "islemler": "Rh(-) ise Anti-D Ig"},
+          {"hafta": "36. hafta", "islemler": "Prezentasyon, pelvik değerlendirme"},
+          {"hafta": "38-40. hafta", "islemler": "NST, doğum planı"}
+        ],
+        "vizit_sikligi": "28. haftaya kadar 4 haftada bir, 36. haftaya kadar 2 haftada bir, sonra haftalık"
+      },
+      "ayirici_tanilar": ["Ektopik gebelik", "Mol hidatiform", "Düşük tehdidi"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Demir + Folik asit", "doz": "60 mg Fe + 400 mcg FA/gün", "sure": "Gebelik boyunca"},
+          {"ad": "D vitamini", "doz": "1200 IU/gün", "sure": "Gebelik boyunca"},
+          {"ad": "Tetanos aşısı", "doz": "2 doz (4 hafta ara)", "sure": "16-36. hafta"}
+        ],
+        "sevk_gerekli": true,
+        "sevk_kosullari": [
+          "🚨 ACİL: Vajinal kanama",
+          "🚨 ACİL: Şiddetli karın ağrısı",
+          "🚨 ACİL: Preeklampsi bulguları (baş ağrısı, görme bozukluğu, ödem, KB yüksekliği)",
+          "🚨 ACİL: Membran rüptürü",
+          "🚨 ACİL: Fetal hareketlerde azalma",
+          "🚨 ACİL: Doğum eylemi belirtileri",
+          "Riskli gebelik (ileri yaş, çoğul gebelik, kronik hastalık)",
+          "Anormal USG bulguları"
+        ]
+      }
+    },
+    {
+      "id": "H057",
+      "ad": "Çocukluk Çağı Aşıları",
+      "kategori": "Çocuk Hastalıkları",
+      "alt_grup": null,
+      "yas_araligi": {"min": 0, "max": 18},
+      "cinsiyet": "her_iki",
+      "acil_sevk": false,
+      "asi_takvimi": {
+        "dogumda": ["Hepatit B (1. doz)"],
+        "1_ay": ["Hepatit B (2. doz)"],
+        "2_ay": ["DTaP-IPV-Hib (1. doz)", "KPA (1. doz)"],
+        "4_ay": ["DTaP-IPV-Hib (2. doz)", "KPA (2. doz)"],
+        "6_ay": ["DTaP-IPV-Hib (3. doz)", "Hepatit B (3. doz)", "OPV (1. doz)"],
+        "9_ay": ["Kızamık (1. doz)"],
+        "12_ay": ["KPA (pekiştirme)", "KKK (1. doz)", "Suçiçeği (1. doz)"],
+        "18_ay": ["DTaP-IPV-Hib (pekiştirme)", "OPV (2. doz)", "Hepatit A (1. doz)"],
+        "24_ay": ["Hepatit A (2. doz)"],
+        "4_6_yas": ["DTaP-IPV (pekiştirme)", "KKK (2. doz)"],
+        "12_yas": ["HPV (kız çocukları - 2 doz)"],
+        "ilkokul_1": ["Td (pekiştirme)", "OPV (3. doz)"],
+        "ilkokul_8": ["Td (pekiştirme)"]
+      },
+      "kontrendikasyonlar": [
+        "Önceki dozda anafilaksi",
+        "Ağır immün yetmezlik (canlı aşılar için)",
+        "Ağır akut hastalık (ertelenir)",
+        "Gebelik (canlı aşılar için)"
+      ],
+      "gecici_erteleme": [
+        "Orta-ağır akut hastalık",
+        "Son 3 ayda kan/immünglobulin (canlı aşılar)",
+        "Kortikosteroid tedavisi (canlı aşılar)"
+      ],
+      "yan_etkiler": {
+        "hafif": ["Enjeksiyon yerinde ağrı, kızarıklık", "Hafif ateş", "Huzursuzluk"],
+        "ciddi": ["Anafilaksi (nadir)", "Konvülziyon (nadir)", "Hipotonik-hiporesponsif atak (nadir)"]
+      },
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Aşı sonrası ateş için Parasetamol", "doz": "10-15 mg/kg/doz", "sure": "Gerekirse"}
+        ],
+        "sevk_gerekli": false,
+        "sevk_kosullari": [
+          "🚨 ACİL: Anafilaksi",
+          "🚨 ACİL: Konvülziyon",
+          "🚨 ACİL: Hipotonik-hiporesponsif atak",
+          "Şüpheli aşı reaksiyonu bildirimi"
+        ]
+      }
+    },
+    {
+      "id": "H058",
+      "ad": "Büyüme-Gelişme İzlemi",
+      "kategori": "Çocuk Hastalıkları",
+      "alt_grup": null,
+      "yas_araligi": {"min": 0, "max": 18},
+      "cinsiyet": "her_iki",
+      "acil_sevk": false,
+      "izlem_parametreleri": {
+        "antropometri": [
+          {"parametre": "Boy", "persentil_sinir": "<3 veya >97 anormal"},
+          {"parametre": "Kilo", "persentil_sinir": "<3 veya >97 anormal"},
+          {"parametre": "Baş çevresi (0-3 yaş)", "persentil_sinir": "<3 veya >97 anormal"},
+          {"parametre": "BKİ (>2 yaş)", "persentil_sinir": ">85: kilolu, >95: obez"}
+        ],
+        "gelisim_basamaklari": {
+          "2_ay": ["Başını kaldırır", "Sosyal gülümseme"],
+          "4_ay": ["Başını tutar", "Nesnelere uzanır"],
+          "6_ay": ["Destekle oturur", "Yabancı korkusu başlar"],
+          "9_ay": ["Desteksiz oturur", "Emekleme", "Mama-baba der"],
+          "12_ay": ["Tutunarak yürür", "Tek kelimeler"],
+          "18_ay": ["Yürür", "10-20 kelime", "Kaşıkla yer"],
+          "24_ay": ["Koşar", "2 kelimelik cümleler", "Giyinmeye yardım"],
+          "3_yas": ["Merdiven çıkar", "3+ kelimelik cümleler", "Çizgi çizer"],
+          "4_yas": ["Tek ayakta sekme", "Hikaye anlatır", "Giyinir"],
+          "5_yas": ["Top yakalar", "Sayar, renkleri bilir", "Arkadaşlarla oynar"]
+        }
+      },
+      "tahliller": [
+        {"id": "T002", "ad": "Hemoglobin", "beklenen": "Anemi taraması (6-12-24 ay)"},
+        {"id": "T023", "ad": "TSH", "beklenen": "Yenidoğan taraması"},
+        {"id": "T121", "ad": "Fenilketonüri testi", "beklenen": "Yenidoğan taraması"},
+        {"id": "T122", "ad": "İşitme testi", "beklenen": "Yenidoğan/1 yaş"},
+        {"id": "T123", "ad": "Görme testi", "beklenen": "3-5 yaş"}
+      ],
+      "uyari_bulgulari": {
+        "buyume": ["Persentil çizgilerini kesme", "Boy kısa + kilo fazla (endokrin)", "Düşmeyen fontanel"],
+        "gelisim": ["2 ay: Başını hiç kaldırmaz", "6 ay: Nesnelere ilgi yok", "12 ay: Kelime yok", "18 ay: Yürümez", "24 ay: 2 kelime birleştiremez"]
+      },
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "D vitamini desteği", "doz": "400 IU/gün (0-1 yaş)", "sure": "İlk yıl boyunca"},
+          {"ad": "Demir desteği (prematüre)", "doz": "2 mg/kg/gün", "sure": "1 yaşına kadar"}
+        ],
+        "sevk_gerekli": false,
+        "sevk_kosullari": [
+          "Boy/kilo <3. persentil",
+          "Gelişim geriliği",
+          "Büyüme hızında yavaşlama",
+          "Regresyon (kazanılmış becerilerin kaybı)"
+        ]
+      }
+    },
+    {
+      "id": "H060",
+      "ad": "Aile Planlaması",
+      "kategori": "Kadın Hastalıkları",
+      "alt_grup": null,
+      "yas_araligi": {"min": 15, "max": 49},
+      "cinsiyet": "her_iki",
+      "acil_sevk": false,
+      "yontemler": {
+        "hormonal": [
+          {
+            "ad": "Kombine oral kontraseptif (KOK)",
+            "etkinlik": "%99 (düzgün kullanımda)",
+            "kontrendikasyon": ["35 yaş üstü sigara", "Tromboemboli öyküsü", "Migren+aura", "Meme kanseri", "Karaciğer hastalığı", "Kontrolsüz HT"],
+            "yan_etki": ["Mide bulantısı", "Baş ağrısı", "Meme hassasiyeti", "Ara kanama"]
+          },
+          {
+            "ad": "Sadece progesteron hapı (minipil)",
+            "etkinlik": "%95-99",
+            "kontrendikasyon": ["Meme kanseri", "Açıklanamayan vajinal kanama"],
+            "yan_etki": ["Düzensiz kanama", "Amenore"]
+          },
+          {
+            "ad": "Enjeksiyon (DMPA)",
+            "etkinlik": "%99",
+            "kontrendikasyon": ["Meme kanseri", "Ciddi kardiyovasküler hastalık"],
+            "yan_etki": ["Düzensiz kanama", "Kilo artışı", "Kemik yoğunluğu kaybı"]
+          },
+          {
+            "ad": "İmplant",
+            "etkinlik": "%99.9",
+            "kontrendikasyon": ["Meme kanseri"],
+            "yan_etki": ["Düzensiz kanama"]
+          }
+        ],
+        "rahim_ici_arac": [
+          {
+            "ad": "Bakırlı RİA",
+            "etkinlik": "%99",
+            "kontrendikasyon": ["PID", "Şüpheli gebelik", "Uterin anomali", "Açıklanamayan kanama"],
+            "yan_etki": ["Ağrılı adet", "Kanama artışı"]
+          },
+          {
+            "ad": "Hormonal RİA (LNG-IUS)",
+            "etkinlik": "%99.8",
+            "kontrendikasyon": ["Meme kanseri", "PID", "Uterin anomali"],
+            "yan_etki": ["Düzensiz kanama sonra amenore"]
+          }
+        ],
+        "bariyer": [
+          {"ad": "Erkek kondom", "etkinlik": "%85-98", "avantaj": "CYBH koruması"},
+          {"ad": "Kadın kondom", "etkinlik": "%79-95", "avantaj": "CYBH koruması"},
+          {"ad": "Diyafram", "etkinlik": "%88", "avantaj": "Hormonsuz"}
+        ],
+        "dogal": [
+          {"ad": "Takvim yöntemi", "etkinlik": "%76-88"},
+          {"ad": "Geri çekme", "etkinlik": "%78"},
+          {"ad": "Emzirme amenoresi (LAM)", "etkinlik": "%98 (ilk 6 ay, tam emzirme)"}
+        ],
+        "cerrahi": [
+          {"ad": "Tüp ligasyonu (kadın)", "etkinlik": "%99.5", "geri_donusum": "Zor"},
+          {"ad": "Vazektomi (erkek)", "etkinlik": "%99.9", "geri_donusum": "Zor"}
+        ],
+        "acil_kontrasepsiyon": [
+          {"ad": "Levonorgestrel", "doz": "1.5 mg tek doz", "sure": "72 saat içinde"},
+          {"ad": "Ulipristal asetat", "doz": "30 mg tek doz", "sure": "120 saat içinde"},
+          {"ad": "Bakırlı RİA", "sure": "5 gün içinde takılabilir"}
+        ]
+      },
+      "tedavi": {
+        "ilaclar": [],
+        "sevk_gerekli": false,
+        "sevk_kosullari": [
+          "RİA takılması",
+          "İmplant takılması",
+          "Cerrahi sterilizasyon",
+          "Komplikasyon (RİA perforasyonu, enfeksiyon)"
+        ]
+      }
+    },
+    {
+      "id": "H061",
+      "ad": "Yaşlı Sağlığı",
+      "kategori": "Diğer",
+      "alt_grup": null,
+      "yas_araligi": {"min": 65, "max": 99},
+      "cinsiyet": "her_iki",
+      "acil_sevk": true,
+      "geriatrik_sendromlar": [
+        {
+          "ad": "Düşme",
+          "risk_faktorleri": ["Kas güçsüzlüğü", "Denge bozukluğu", "Görme bozukluğu", "Polifarmasi", "Çevresel tehlikeler"],
+          "degerlendirme": ["Get Up and Go testi", "İlaç gözden geçirme", "Görme kontrolü"],
+          "onlem": ["Ev güvenliği", "Egzersiz", "Yardımcı cihaz"]
+        },
+        {
+          "ad": "Deliryum",
+          "risk_faktorleri": ["Enfeksiyon", "İlaçlar", "Dehidratasyon", "Metabolik bozukluk"],
+          "belirtiler": ["Akut başlangıç", "Dalgalanan bilinç", "Dikkat bozukluğu"],
+          "acil_sevk": true
+        },
+        {
+          "ad": "Demans",
+          "belirtiler": ["Hafıza kaybı", "Günlük aktivitelerde bozulma", "Kişilik değişikliği"],
+          "degerlendirme": ["Mini Mental Test (MMSE)", "Saat çizme testi"]
+        },
+        {
+          "ad": "İnkontinans",
+          "tipler": ["Stres", "Urge", "Overflow", "Fonksiyonel"],
+          "degerlendirme": ["Pelvik muayene", "İşeme günlüğü", "TİT"]
+        },
+        {
+          "ad": "Malnütrisyon",
+          "belirtiler": ["Kilo kaybı", "İştahsızlık", "Kas kaybı"],
+          "degerlendirme": ["Mini Nutrisyonel Değerlendirme (MNA)", "Albümin"]
+        },
+        {
+          "ad": "Polifarmasi",
+          "tanim": "≥5 ilaç kullanımı",
+          "riskler": ["İlaç etkileşimi", "Yan etkiler", "Uyumsuzluk"],
+          "yonetim": ["İlaç gözden geçirme", "Gereksiz ilaçları kes", "START/STOPP kriterleri"]
+        }
+      ],
+      "tarama_onerileri": [
+        {"tarama": "Tansiyon", "siklik": "Her vizit"},
+        {"tarama": "Görme/işitme", "siklik": "Yıllık"},
+        {"tarama": "Depresyon", "siklik": "Yıllık"},
+        {"tarama": "Kognitif durum", "siklik": "Yıllık"},
+        {"tarama": "Düşme riski", "siklik": "Yıllık"},
+        {"tarama": "İlaç gözden geçirme", "siklik": "Her vizit"},
+        {"tarama": "Tetanos aşısı", "siklik": "10 yılda bir"},
+        {"tarama": "Grip aşısı", "siklik": "Yıllık"},
+        {"tarama": "Pnömokok aşısı", "siklik": "65 yaşında, 5 yıl sonra rapel"}
+      ],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "D vitamini", "doz": "800-1000 IU/gün", "sure": "Sürekli"},
+          {"ad": "Kalsiyum", "doz": "1000-1200 mg/gün", "sure": "Sürekli"}
+        ],
+        "sevk_gerekli": true,
+        "sevk_kosullari": [
+          "🚨 ACİL: Deliryum",
+          "🚨 ACİL: Düşme sonrası kırık şüphesi",
+          "🚨 ACİL: Akut fonksiyonel kayıp",
+          "Demans değerlendirmesi",
+          "Polifarmasi yönetimi",
+          "Rehabilitasyon gereksinimi"
+        ]
+      }
+    },
+    {
+      "id": "H068",
+      "ad": "Kızamık",
+      "kategori": "Enfeksiyon",
+      "alt_grup": "Çocukluk Çağı Enfeksiyonları",
+      "yas_araligi": {"min": 0, "max": 99},
+      "cinsiyet": "her_iki",
+      "acil_sevk": true,
+      "semptomlar": [
+        {"id": "S001", "ad": "Ateş", "agirlik": 0.95, "patognomonik": false},
+        {"id": "S006", "ad": "Öksürük", "agirlik": 0.85, "patognomonik": false},
+        {"id": "S118", "ad": "Rinore", "agirlik": 0.80, "patognomonik": false},
+        {"id": "S040", "ad": "Göz kızarıklığı", "agirlik": 0.85, "patognomonik": false},
+        {"id": "S022", "ad": "Döküntü", "agirlik": 0.95, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B305", "ad": "Koplik lekeleri", "agirlik": 0.99, "patognomonik": true},
+        {"id": "B306", "ad": "Makülopapüler döküntü (yüzden başlar)", "agirlik": 0.95},
+        {"id": "B307", "ad": "Döküntü saç çizgisi arkasından başlar", "agirlik": 0.90},
+        {"id": "B308", "ad": "Konjonktivit + fotofobi", "agirlik": 0.85}
+      ],
+      "tahliller": [
+        {"id": "T124", "ad": "Kızamık IgM", "beklenen": "Pozitif (akut)"}
+      ],
+      "komplikasyonlar": ["Pnömoni", "Ensefalit", "Otitis media", "İshal", "Körlük"],
+      "ayirici_tanilar": ["Kızamıkçık", "Roseola", "Eritema enfeksiyozum", "Alerjik döküntü"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Destek tedavisi", "doz": "Sıvı, ateş düşürücü", "sure": "İyileşene kadar"},
+          {"ad": "A vitamini", "doz": "<6 ay: 50.000 IU, 6-12 ay: 100.000 IU, >12 ay: 200.000 IU", "sure": "2 doz (gün 1 ve 2)"},
+          {"ad": "İzolasyon", "doz": "-", "sure": "Döküntüden 4 gün sonrasına kadar"}
+        ],
+        "sevk_gerekli": true,
+        "sevk_kosullari": [
+          "🚨 ACİL: Pnömoni bulguları",
+          "🚨 ACİL: Ensefalit şüphesi",
+          "🚨 ACİL: Ağır dehidratasyon",
+          "BİLDİRİMİ ZORUNLU HASTALIK",
+          "Tüm olgular sağlık müdürlüğüne bildirilmeli"
+        ]
+      }
+    },
+    {
+      "id": "H069",
+      "ad": "Kızamıkçık",
+      "kategori": "Enfeksiyon",
+      "alt_grup": "Çocukluk Çağı Enfeksiyonları",
+      "yas_araligi": {"min": 0, "max": 99},
+      "cinsiyet": "her_iki",
+      "acil_sevk": false,
+      "semptomlar": [
+        {"id": "S001", "ad": "Ateş", "agirlik": 0.70, "patognomonik": false},
+        {"id": "S022", "ad": "Döküntü", "agirlik": 0.95, "patognomonik": false},
+        {"id": "S147", "ad": "Lenf bezi büyümesi", "agirlik": 0.90, "patognomonik": false},
+        {"id": "S026", "ad": "Eklem ağrısı", "agirlik": 0.60, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B309", "ad": "Posterior servikal LAP", "agirlik": 0.95, "patognomonik": true},
+        {"id": "B310", "ad": "Retroauriküler LAP", "agirlik": 0.90},
+        {"id": "B311", "ad": "Pembe makülopapüler döküntü", "agirlik": 0.85},
+        {"id": "B312", "ad": "3 günde gerileyen döküntü", "agirlik": 0.80}
+      ],
+      "tahliller": [
+        {"id": "T125", "ad": "Rubella IgM", "beklenen": "Pozitif (akut)"},
+        {"id": "T119", "ad": "Rubella IgG", "beklenen": "Bağışıklık durumu"}
+      ],
+      "onem": "Gebelikte konjenital kızamıkçık sendromu riski!",
+      "ayirici_tanilar": ["Kızamık", "Roseola", "Eritema enfeksiyozum", "İlaç döküntüsü"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Destek tedavisi", "doz": "Semptomatik", "sure": "İyileşene kadar"},
+          {"ad": "İzolasyon", "doz": "-", "sure": "Döküntüden 7 gün sonrasına kadar"}
+        ],
+        "sevk_gerekli": false,
+        "sevk_kosullari": [
+          "BİLDİRİMİ ZORUNLU HASTALIK",
+          "Gebe kadınla temas varsa",
+          "Gebelikte enfeksiyon şüphesi"
+        ]
+      }
+    },
+    {
+      "id": "H070",
+      "ad": "Suçiçeği (Varisella)",
+      "kategori": "Enfeksiyon",
+      "alt_grup": "Çocukluk Çağı Enfeksiyonları",
+      "yas_araligi": {"min": 0, "max": 99},
+      "cinsiyet": "her_iki",
+      "acil_sevk": true,
+      "semptomlar": [
+        {"id": "S001", "ad": "Ateş", "agirlik": 0.80, "patognomonik": false},
+        {"id": "S022", "ad": "Döküntü", "agirlik": 0.95, "patognomonik": false},
+        {"id": "S021", "ad": "Kaşıntı", "agirlik": 0.90, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B313", "ad": "Veziküler döküntü", "agirlik": 0.95, "patognomonik": true},
+        {"id": "B314", "ad": "Farklı evrelerde lezyon (makül-papül-vezikül-kabuk)", "agirlik": 0.95},
+        {"id": "B315", "ad": "Gövde ağırlıklı dağılım", "agirlik": 0.85},
+        {"id": "B316", "ad": "Mukozal tutulum olabilir", "agirlik": 0.70}
+      ],
+      "tahliller": [
+        {"id": "T095", "ad": "Tzanck testi", "beklenen": "Multinükleer dev hücreler"}
+      ],
+      "komplikasyonlar": ["Bakteriyel süperenfeksiyon", "Pnömoni", "Ensefalit", "Reye sendromu (ASA ile)"],
+      "ayirici_tanilar": ["Herpes simpleks", "İmpetigo", "Böcek ısırığı", "Stevens-Johnson sendromu"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Kalamin losyon", "doz": "Gerektiğinde topikal", "sure": "Kaşıntı için"},
+          {"ad": "Antihistaminik", "doz": "Yaşa göre doz", "sure": "Kaşıntı için"},
+          {"ad": "Asiklovir (24 saat içinde)", "doz": "Çocuk: 20 mg/kg 4x/gün, Erişkin: 800 mg 5x/gün", "sure": "5 gün"},
+          {"ad": "ASA VERMEYİN (Reye sendromu riski)", "doz": "-", "sure": "-"}
+        ],
+        "sevk_gerekli": true,
+        "sevk_kosullari": [
+          "🚨 ACİL: Pnömoni bulguları",
+          "🚨 ACİL: Ensefalit şüphesi",
+          "🚨 ACİL: Hemorajik suçiçeği",
+          "İmmünsüprese hasta",
+          "Yenidoğan/gebe hasta",
+          "BİLDİRİMİ ZORUNLU HASTALIK"
+        ]
+      }
+    },
+    {
+      "id": "H071",
+      "ad": "Kabakulak (Parotit)",
+      "kategori": "Enfeksiyon",
+      "alt_grup": "Çocukluk Çağı Enfeksiyonları",
+      "yas_araligi": {"min": 2, "max": 99},
+      "cinsiyet": "her_iki",
+      "acil_sevk": true,
+      "semptomlar": [
+        {"id": "S001", "ad": "Ateş", "agirlik": 0.80, "patognomonik": false},
+        {"id": "S024", "ad": "Şişlik", "agirlik": 0.95, "patognomonik": false},
+        {"id": "S037", "ad": "Kulak ağrısı", "agirlik": 0.75, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B317", "ad": "Parotis bezinde şişlik", "agirlik": 0.95, "patognomonik": true},
+        {"id": "B318", "ad": "Çift taraflı veya tek taraflı", "agirlik": 0.85},
+        {"id": "B319", "ad": "Tragus önünde şişlik", "agirlik": 0.90},
+        {"id": "B320", "ad": "Ekşi ile ağrı artışı", "agirlik": 0.80}
+      ],
+      "tahliller": [
+        {"id": "T126", "ad": "Kabakulak IgM", "beklenen": "Pozitif"},
+        {"id": "T127", "ad": "Serum amilaz", "beklenen": "Yüksek"}
+      ],
+      "komplikasyonlar": ["Orşit (puberte sonrası erkek %20-30)", "Ooforit", "Menenjit", "Pankreatit", "Sağırlık"],
+      "ayirici_tanilar": ["Bakteriyel parotit", "Servikal LAP", "Dental apse", "Tükürük bezi taşı"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Destek tedavisi", "doz": "İstirahat, sıvı, analjezik", "sure": "İyileşene kadar"},
+          {"ad": "Soğuk/sıcak kompres", "doz": "Gerektiğinde", "sure": "Ağrı için"},
+          {"ad": "İzolasyon", "doz": "-", "sure": "Şişlik başlangıcından 5 gün sonrasına kadar"}
+        ],
+        "sevk_gerekli": true,
+        "sevk_kosullari": [
+          "🚨 ACİL: Menenjit bulguları",
+          "🚨 ACİL: Orşit",
+          "🚨 ACİL: Pankreatit bulguları",
+          "BİLDİRİMİ ZORUNLU HASTALIK"
+        ]
+      }
+    },
+    {
+      "id": "H072",
+      "ad": "Boğmaca",
+      "kategori": "Enfeksiyon",
+      "alt_grup": "Çocukluk Çağı Enfeksiyonları",
+      "yas_araligi": {"min": 0, "max": 99},
+      "cinsiyet": "her_iki",
+      "acil_sevk": true,
+      "semptomlar": [
+        {"id": "S006", "ad": "Öksürük", "agirlik": 0.95, "patognomonik": true},
+        {"id": "S015", "ad": "Kusma", "agirlik": 0.75, "patognomonik": false},
+        {"id": "S001", "ad": "Ateş", "agirlik": 0.50, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B321", "ad": "Paroksismal öksürük nöbetleri", "agirlik": 0.95, "patognomonik": true},
+        {"id": "B322", "ad": "İnspiratuar stridor (hoop)", "agirlik": 0.90},
+        {"id": "B323", "ad": "Öksürük sonrası kusma", "agirlik": 0.85},
+        {"id": "B324", "ad": "Siyanoz atakları (bebek)", "agirlik": 0.80},
+        {"id": "B325", "ad": "Subkonjunktival kanama", "agirlik": 0.60}
+      ],
+      "evreler": [
+        {"ad": "Kataral evre", "sure": "1-2 hafta", "ozellik": "Soğuk algınlığı benzeri"},
+        {"ad": "Paroksismal evre", "sure": "2-6 hafta", "ozellik": "Şiddetli öksürük nöbetleri"},
+        {"ad": "Konvelesan evre", "sure": "Haftalar-aylar", "ozellik": "Öksürük azalır"}
+      ],
+      "tahliller": [
+        {"id": "T128", "ad": "Nazofarengeal sürüntü kültürü", "beklenen": "B. pertussis"},
+        {"id": "T129", "ad": "PCR", "beklenen": "B. pertussis DNA"},
+        {"id": "T008", "ad": "Lökosit", "beklenen": "Lenfositoz"}
+      ],
+      "ayirici_tanilar": ["Viral ÜSYE", "Bronşit", "Pnömoni", "Yabancı cisim"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Azitromisin", "doz": "Çocuk: 10 mg/kg 1. gün, 5 mg/kg 2-5. gün, Erişkin: 500 mg 1. gün, 250 mg 2-5. gün", "sure": "5 gün"},
+          {"ad": "Eritromisin", "doz": "40-50 mg/kg/gün 4 doz", "sure": "14 gün"},
+          {"ad": "Trimetoprim-sulfametoksazol (alternatif)", "doz": "8 mg/kg/gün TMP", "sure": "14 gün"}
+        ],
+        "sevk_gerekli": true,
+        "sevk_kosullari": [
+          "🚨 ACİL: Bebek <6 ay",
+          "🚨 ACİL: Apne/siyanoz atakları",
+          "🚨 ACİL: Solunum yetmezliği",
+          "🚨 ACİL: Konvülziyon",
+          "BİLDİRİMİ ZORUNLU HASTALIK",
+          "Temas profilaksisi (aile üyeleri)"
+        ]
+      }
+    },
+    {
+      "id": "H073",
+      "ad": "İmpetigo",
+      "kategori": "Dermatolojik",
+      "alt_grup": "Bakteriyel Deri Enfeksiyonları",
+      "yas_araligi": {"min": 0, "max": 99},
+      "cinsiyet": "her_iki",
+      "acil_sevk": false,
+      "semptomlar": [
+        {"id": "S022", "ad": "Döküntü", "agirlik": 0.95, "patognomonik": false},
+        {"id": "S021", "ad": "Kaşıntı", "agirlik": 0.70, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B326", "ad": "Bal rengi kabuklu lezyon", "agirlik": 0.95, "patognomonik": true},
+        {"id": "B327", "ad": "Yüz ve ekstremitelerde yerleşim", "agirlik": 0.85},
+        {"id": "B328", "ad": "Veziküller hızla kabuklanır", "agirlik": 0.80},
+        {"id": "B329", "ad": "Bölgesel LAP olabilir", "agirlik": 0.60}
+      ],
+      "tahliller": [
+        {"id": "T062", "ad": "Gram boyama", "beklenen": "Gram (+) kok"},
+        {"id": "T130", "ad": "Kültür", "beklenen": "S. aureus veya S. pyogenes"}
+      ],
+      "ayirici_tanilar": ["Herpes simpleks", "Suçiçeği", "Kontakt dermatit", "Ektima"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Topikal mupirosin", "doz": "3x/gün", "sure": "5-7 gün (sınırlı ise)"},
+          {"ad": "Topikal fusidik asit", "doz": "3x/gün", "sure": "5-7 gün"},
+          {"ad": "Sefaleksin (yaygın ise)", "doz": "25-50 mg/kg/gün 4 doz", "sure": "7-10 gün"},
+          {"ad": "Amoksisilin-klavulanat", "doz": "25-45 mg/kg/gün", "sure": "7-10 gün"}
+        ],
+        "sevk_gerekli": false,
+        "sevk_kosullari": [
+          "Tedaviye yanıtsızlık",
+          "Yaygın tutulum",
+          "Poststreptokoksik glomerülonefrit şüphesi"
+        ]
+      }
+    },
+    {
+      "id": "H074",
+      "ad": "Selülit",
+      "kategori": "Dermatolojik",
+      "alt_grup": "Bakteriyel Deri Enfeksiyonları",
+      "yas_araligi": {"min": 0, "max": 99},
+      "cinsiyet": "her_iki",
+      "acil_sevk": true,
+      "semptomlar": [
+        {"id": "S023", "ad": "Kızarıklık", "agirlik": 0.95, "patognomonik": false},
+        {"id": "S024", "ad": "Şişlik", "agirlik": 0.90, "patognomonik": false},
+        {"id": "S001", "ad": "Ateş", "agirlik": 0.75, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B330", "ad": "Sıcak, kızarık, ödemli deri", "agirlik": 0.95},
+        {"id": "B331", "ad": "Diffüz sınırlı eritem", "agirlik": 0.90},
+        {"id": "B332", "ad": "Ağrılı palpasyon", "agirlik": 0.85},
+        {"id": "B333", "ad": "Bölgesel LAP", "agirlik": 0.70},
+        {"id": "B334", "ad": "Giriş kapısı (yara, mantar, böcek ısırığı)", "agirlik": 0.75}
+      ],
+      "tahliller": [
+        {"id": "T001", "ad": "Tam kan sayımı", "beklenen": "Lökositoz"},
+        {"id": "T039", "ad": "CRP", "beklenen": "Yüksek"}
+      ],
+      "ayirici_tanilar": ["Erizipel", "Nekrotizan fasiit", "DVT", "Kontakt dermatit", "Gut"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Amoksisilin-klavulanat", "doz": "875/125 mg 2x/gün veya 625 mg 3x/gün", "sure": "7-10 gün"},
+          {"ad": "Sefaleksin", "doz": "500 mg 4x/gün", "sure": "7-10 gün"},
+          {"ad": "Klindamisin (penisilin alerjisi)", "doz": "300-450 mg 4x/gün", "sure": "7-10 gün"},
+          {"ad": "Ekstremite elevasyonu", "doz": "-", "sure": "Ödem için"}
+        ],
+        "sevk_gerekli": true,
+        "sevk_kosullari": [
+          "🚨 ACİL: Hızlı yayılım",
+          "🚨 ACİL: Nekrotizan fasiit şüphesi (krepitasyon, mor renk, şiddetli ağrı)",
+          "🚨 ACİL: Sistemik toksisite (yüksek ateş, hipotansiyon)",
+          "🚨 ACİL: Orbital/periorbital selülit",
+          "Diyabetik hastada",
+          "İmmünsüprese hastada",
+          "Oral tedaviye yanıtsızlık"
+        ]
+      }
+    },
+    {
+      "id": "H075",
+      "ad": "Herpes Zoster (Zona)",
+      "kategori": "Dermatolojik",
+      "alt_grup": "Viral Deri Enfeksiyonları",
+      "yas_araligi": {"min": 50, "max": 99},
+      "cinsiyet": "her_iki",
+      "acil_sevk": true,
+      "semptomlar": [
+        {"id": "S022", "ad": "Döküntü", "agirlik": 0.95, "patognomonik": false},
+        {"id": "S029", "ad": "Ağrı", "agirlik": 0.95, "patognomonik": false},
+        {"id": "S021", "ad": "Kaşıntı", "agirlik": 0.70, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B335", "ad": "Dermatomal dağılım", "agirlik": 0.99, "patognomonik": true},
+        {"id": "B336", "ad": "Orta hattı geçmeyen lezyon", "agirlik": 0.95},
+        {"id": "B337", "ad": "Gruplanmış veziküller", "agirlik": 0.90},
+        {"id": "B338", "ad": "Prodromal ağrı (döküntüden önce)", "agirlik": 0.85}
+      ],
+      "tahliller": [
+        {"id": "T095", "ad": "Tzanck testi", "beklenen": "Multinükleer dev hücreler"},
+        {"id": "T131", "ad": "VZV PCR", "beklenen": "Pozitif"}
+      ],
+      "komplikasyonlar": ["Postherpetik nevralji", "Herpes zoster oftalmikus", "Ramsay Hunt sendromu", "Dissemine zoster"],
+      "ayirici_tanilar": ["Herpes simpleks", "Kontakt dermatit", "İmpetigo"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Asiklovir", "doz": "800 mg 5x/gün", "sure": "7 gün (72 saat içinde başla)"},
+          {"ad": "Valasiklovir", "doz": "1000 mg 3x/gün", "sure": "7 gün"},
+          {"ad": "Famsiklovir", "doz": "500 mg 3x/gün", "sure": "7 gün"},
+          {"ad": "Parasetamol/NSAİİ", "doz": "Gerektiğinde", "sure": "Ağrı için"},
+          {"ad": "Gabapentin/Pregabalin", "doz": "Titre edilerek", "sure": "Postherpetik nevralji için"}
+        ],
+        "sevk_gerekli": true,
+        "sevk_kosullari": [
+          "🚨 ACİL: Herpes zoster oftalmikus (burun ucu tutulumu - Hutchinson belirtisi)",
+          "🚨 ACİL: Ramsay Hunt sendromu (kulak tutulumu + fasiyal paralizi)",
+          "🚨 ACİL: Dissemine zoster",
+          "İmmünsüprese hasta",
+          "Şiddetli ağrı",
+          "Oftalmoloji konsültasyonu (göz tutulumu)"
+        ]
+      }
+    },
+    {
+      "id": "H076",
+      "ad": "Skabiyez (Uyuz)",
+      "kategori": "Dermatolojik",
+      "alt_grup": "Paraziter Deri Hastalıkları",
+      "yas_araligi": {"min": 0, "max": 99},
+      "cinsiyet": "her_iki",
+      "acil_sevk": false,
+      "semptomlar": [
+        {"id": "S021", "ad": "Kaşıntı", "agirlik": 0.99, "patognomonik": true},
+        {"id": "S022", "ad": "Döküntü", "agirlik": 0.85, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B339", "ad": "Gece artan şiddetli kaşıntı", "agirlik": 0.95, "patognomonik": true},
+        {"id": "B340", "ad": "Parmak araları, bilek, genital bölge tutulumu", "agirlik": 0.90},
+        {"id": "B341", "ad": "Tünel lezyonları (burrow)", "agirlik": 0.95},
+        {"id": "B342", "ad": "Aile üyelerinde benzer şikayet", "agirlik": 0.85},
+        {"id": "B343", "ad": "Ekskoriyasyonlar", "agirlik": 0.80}
+      ],
+      "tahliller": [
+        {"id": "T132", "ad": "Kazıntı mikroskopisi", "beklenen": "Sarcoptes scabiei, yumurta veya feçes"}
+      ],
+      "ayirici_tanilar": ["Atopik dermatit", "Kontakt dermatit", "İlaç döküntüsü", "Pedikülozis"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Permetrin krem %5", "doz": "Boyundan aşağı tüm vücuda, 8-14 saat sonra yıka", "sure": "1 hafta sonra tekrar"},
+          {"ad": "İvermektin oral", "doz": "200 mcg/kg tek doz", "sure": "2 hafta sonra tekrar"},
+          {"ad": "Benzil benzoat %25", "doz": "3 gece üst üste", "sure": "1 hafta sonra tekrar"},
+          {"ad": "Antihistaminik", "doz": "Yaşa göre", "sure": "Kaşıntı için"}
+        ],
+        "onemli_notlar": [
+          "Tüm aile üyeleri aynı anda tedavi edilmeli",
+          "Yatak çarşafları, giysiler 60°C'de yıkanmalı",
+          "Tedavi sonrası kaşıntı 2-4 hafta sürebilir (alerjik reaksiyon)"
+        ],
+        "sevk_gerekli": false,
+        "sevk_kosullari": [
+          "Norveç uyuzu (kabuklu skabiyez)",
+          "Tedaviye yanıtsızlık",
+          "Sekonder enfeksiyon"
+        ]
+      }
+    },
+    {
+      "id": "H077",
+      "ad": "Pedikülozis (Bit)",
+      "kategori": "Dermatolojik",
+      "alt_grup": "Paraziter Deri Hastalıkları",
+      "yas_araligi": {"min": 3, "max": 99},
+      "cinsiyet": "her_iki",
+      "acil_sevk": false,
+      "tipler": [
+        {"ad": "Pedikülozis kapitis", "lokalizasyon": "Saçlı deri", "yayilim": "Direkt temas, tarak, şapka"},
+        {"ad": "Pedikülozis korporis", "lokalizasyon": "Vücut (giysilerden)", "yayilim": "Hijyen yetersizliği"},
+        {"ad": "Pedikülozis pubis", "lokalizasyon": "Pubik bölge", "yayilim": "Cinsel temas"}
+      ],
+      "semptomlar": [
+        {"id": "S021", "ad": "Kaşıntı", "agirlik": 0.95, "patognomonik": false}
+      ],
+      "bulgular": [
+        {"id": "B344", "ad": "Saçta sirke (nit)", "agirlik": 0.99, "patognomonik": true},
+        {"id": "B345", "ad": "Canlı bit görülmesi", "agirlik": 0.99},
+        {"id": "B346", "ad": "Oksipital bölge ekskoriyasyonu", "agirlik": 0.80},
+        {"id": "B347", "ad": "Servikal LAP", "agirlik": 0.60}
+      ],
+      "tahliller": [],
+      "ayirici_tanilar": ["Seboreik dermatit", "Psoriazis", "Skabiyez"],
+      "tedavi": {
+        "ilaclar": [
+          {"ad": "Permetrin losyon %1", "doz": "Saça uygula, 10 dk bekle, yıka", "sure": "7-10 gün sonra tekrar"},
+          {"ad": "Dimetikon %4", "doz": "Saça uygula, 8 saat bekle", "sure": "7 gün sonra tekrar"},
+          {"ad": "İvermektin oral", "doz": "200-400 mcg/kg", "sure": "Dirençli olgularda"},
+          {"ad": "Sık dişli tarak ile sirke temizliği", "doz": "Günlük", "sure": "2 hafta"}
+        ],
+        "onemli_notlar": [
+          "Okul/kreşte salgın kontrolü",
+          "Aile üyelerinin taranması",
+          "Tarak, şapka, yastık paylaşılmamalı"
+        ],
+        "sevk_gerekli": false,
+        "sevk_kosullari": [
+          "Tedaviye yanıtsızlık",
+          "Sekonder enfeksiyon"
+        ]
+      }
+    }
+  ],
+  "ek_semptomlar": [
+    {"id": "S157", "ad": "Adet gecikmesi", "kategori": "Jinekolojik"},
+    {"id": "S158", "ad": "Fetal hareket", "kategori": "Obstetrik"},
+    {"id": "S159", "ad": "Vajinal kanama (gebelikte)", "kategori": "Obstetrik"},
+    {"id": "S160", "ad": "Kasık ağrısı", "kategori": "Jinekolojik"},
+    {"id": "S161", "ad": "Prodromal ağrı", "kategori": "Dermatolojik"},
+    {"id": "S162", "ad": "Gece artan kaşıntı", "kategori": "Dermatolojik"}
+  ],
+  "ek_tahliller": [
+    {"id": "T112", "ad": "Efor testi", "kategori": "Kardiyoloji"},
+    {"id": "T113", "ad": "Troponin", "kategori": "Kardiyoloji"},
+    {"id": "T114", "ad": "C-peptid", "kategori": "Endokrin"},
+    {"id": "T115", "ad": "Anti-GAD antikoru", "kategori": "Endokrin"},
+    {"id": "T116", "ad": "İdrar ketonu", "kategori": "Biyokimya"},
+    {"id": "T117", "ad": "β-hCG (idrar/kan)", "kategori": "Jinekoloji"},
+    {"id": "T118", "ad": "Kan grubu + Rh", "kategori": "Hematoloji"},
+    {"id": "T119", "ad": "Rubella IgG", "kategori": "Seroloji"},
+    {"id": "T120", "ad": "Obstetrik USG", "kategori": "Radyoloji"},
+    {"id": "T121", "ad": "Fenilketonüri testi", "kategori": "Biyokimya"},
+    {"id": "T122", "ad": "İşitme testi", "kategori": "KBB"},
+    {"id": "T123", "ad": "Görme testi", "kategori": "Oftalmoloji"},
+    {"id": "T124", "ad": "Kızamık IgM", "kategori": "Seroloji"},
+    {"id": "T125", "ad": "Rubella IgM", "kategori": "Seroloji"},
+    {"id": "T126", "ad": "Kabakulak IgM", "kategori": "Seroloji"},
+    {"id": "T127", "ad": "Serum amilaz", "kategori": "Biyokimya"},
+    {"id": "T128", "ad": "Nazofarengeal sürüntü kültürü", "kategori": "Mikrobiyoloji"},
+    {"id": "T129", "ad": "PCR (Bordetella)", "kategori": "Mikrobiyoloji"},
+    {"id": "T130", "ad": "Deri kültürü", "kategori": "Mikrobiyoloji"},
+    {"id": "T131", "ad": "VZV PCR", "kategori": "Mikrobiyoloji"},
+    {"id": "T132", "ad": "Kazıntı mikroskopisi", "kategori": "Parazitoloji"}
+  ]
+}

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Sayfa OCR - Gemini API</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+        .api-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .api-section label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00d4ff;
+            font-weight: 600;
+        }
+        .api-section input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background: #0f0f23;
+            color: #fff;
+            font-size: 1rem;
+        }
+        .api-section input:focus {
+            outline: none;
+            border-color: #00d4ff;
+        }
+        .upload-area {
+            border: 3px dashed #444;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: rgba(255,255,255,0.02);
+        }
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #00d4ff;
+            background: rgba(0,212,255,0.05);
+        }
+        .upload-area input {
+            display: none;
+        }
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        .upload-text {
+            font-size: 1.1rem;
+            color: #aaa;
+        }
+        .upload-hint {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 10px;
+        }
+        .file-list {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .file-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .file-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .file-item.processing {
+            border: 2px solid #f39c12;
+        }
+        .file-item.success {
+            border: 2px solid #27ae60;
+        }
+        .file-item.error {
+            border: 2px solid #e74c3c;
+        }
+        .file-item.retry {
+            border: 2px solid #9b59b6;
+        }
+        .file-number {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .file-thumb {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .file-name {
+            font-size: 0.75rem;
+            color: #aaa;
+            word-break: break-all;
+            max-height: 36px;
+            overflow: hidden;
+        }
+        .file-status {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        .file-status.waiting { background: #555; }
+        .file-status.processing { background: #f39c12; color: #000; }
+        .file-status.success { background: #27ae60; }
+        .file-status.error { background: #e74c3c; }
+        .file-status.retry { background: #9b59b6; }
+        .remove-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            background: #e74c3c;
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            display: none;
+        }
+        .file-item:hover .remove-btn {
+            display: block;
+        }
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: #000;
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,212,255,0.3);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: #fff;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #1e8449);
+            color: #fff;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .progress-section {
+            margin-top: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            display: none;
+        }
+        .progress-section.active {
+            display: block;
+        }
+        .progress-bar {
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+        .progress-text {
+            text-align: center;
+            color: #aaa;
+        }
+        .log-section {
+            margin-top: 20px;
+            background: #0a0a15;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+        }
+        .log-entry {
+            padding: 3px 0;
+            border-bottom: 1px solid #1a1a2e;
+        }
+        .log-entry.info { color: #00d4ff; }
+        .log-entry.success { color: #27ae60; }
+        .log-entry.error { color: #e74c3c; }
+        .log-entry.warning { color: #f39c12; }
+        .result-section {
+            margin-top: 30px;
+            background: rgba(39, 174, 96, 0.1);
+            border: 2px solid #27ae60;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            display: none;
+        }
+        .result-section.active {
+            display: block;
+        }
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        .manual-pages {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 8px;
+            color: #e74c3c;
+        }
+        @media (max-width: 600px) {
+            .file-list {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            .btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📄 PDF Sayfa OCR</h1>
+        <p class="subtitle">Gemini API ile PDF sayfalarınızı metne dönüştürün</p>
+
+        <div class="api-section">
+            <label for="apiKey">🔑 Gemini API Key</label>
+            <input type="password" id="apiKey" placeholder="API anahtarınızı girin..." autocomplete="off">
+        </div>
+
+        <div class="upload-area" id="uploadArea">
+            <input type="file" id="fileInput" accept="image/*" multiple>
+            <div class="upload-icon">🖼️</div>
+            <div class="upload-text">PDF sayfalarının resimlerini buraya sürükleyin</div>
+            <div class="upload-text">veya tıklayarak seçin</div>
+            <div class="upload-hint">💡 Shift ile çoklu seçimde sıralı numaralandırma yapılır</div>
+        </div>
+
+        <div class="file-list" id="fileList"></div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="startBtn" disabled>
+                🚀 OCR Başlat
+            </button>
+            <button class="btn btn-danger" id="clearBtn" disabled>
+                🗑️ Temizle
+            </button>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progressText">Hazırlanıyor...</div>
+            <div class="log-section" id="logSection"></div>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-icon">✅</div>
+            <h2>İşlem Tamamlandı!</h2>
+            <p id="resultText"></p>
+            <div class="manual-pages" id="manualPages" style="display:none"></div>
+            <div style="margin-top: 20px;">
+                <button class="btn btn-success" id="downloadBtn">
+                    📥 ZIP İndir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Durum değişkenleri
+        let files = [];
+        let results = {};
+        let failedFiles = [];
+        let zipBlob = null;
+        let globalFileCounter = 0;
+
+        // DOM elemanları
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const startBtn = document.getElementById('startBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const progressSection = document.getElementById('progressSection');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const logSection = document.getElementById('logSection');
+        const resultSection = document.getElementById('resultSection');
+        const resultText = document.getElementById('resultText');
+        const manualPages = document.getElementById('manualPages');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const apiKeyInput = document.getElementById('apiKey');
+
+        // Event listeners
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+        startBtn.addEventListener('click', startOCR);
+        clearBtn.addEventListener('click', clearAll);
+        downloadBtn.addEventListener('click', downloadZip);
+
+        // Dosya işleme
+        function handleFiles(newFiles) {
+            const startNumber = globalFileCounter + 1;
+            
+            for (let i = 0; i < newFiles.length; i++) {
+                const file = newFiles[i];
+                if (!file.type.startsWith('image/')) continue;
+                
+                globalFileCounter++;
+                const fileObj = {
+                    id: globalFileCounter,
+                    file: file,
+                    number: globalFileCounter,
+                    status: 'waiting',
+                    result: null
+                };
+                files.push(fileObj);
+            }
+            
+            renderFileList();
+            updateButtons();
+        }
+
+        // Dosya listesi render
+        function renderFileList() {
+            fileList.innerHTML = '';
+            
+            files.forEach((fileObj, index) => {
+                const div = document.createElement('div');
+                div.className = `file-item ${fileObj.status}`;
+                div.dataset.id = fileObj.id;
+                
+                const thumb = document.createElement('img');
+                thumb.className = 'file-thumb';
+                thumb.src = URL.createObjectURL(fileObj.file);
+                
+                const number = document.createElement('div');
+                number.className = 'file-number';
+                number.textContent = fileObj.number;
+                
+                const name = document.createElement('div');
+                name.className = 'file-name';
+                name.textContent = fileObj.file.name;
+                
+                const status = document.createElement('div');
+                status.className = `file-status ${fileObj.status}`;
+                status.textContent = getStatusText(fileObj.status);
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
+                removeBtn.innerHTML = '×';
+                removeBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    removeFile(fileObj.id);
+                };
+                
+                div.appendChild(number);
+                div.appendChild(thumb);
+                div.appendChild(name);
+                div.appendChild(status);
+                div.appendChild(removeBtn);
+                
+                fileList.appendChild(div);
+            });
+        }
+
+        function getStatusText(status) {
+            const texts = {
+                'waiting': '⏳ Bekliyor',
+                'processing': '🔄 İşleniyor',
+                'success': '✅ Tamam',
+                'error': '❌ Hata',
+                'retry': '🔁 Tekrar'
+            };
+            return texts[status] || status;
+        }
+
+        function removeFile(id) {
+            files = files.filter(f => f.id !== id);
+            // Numaraları yeniden sırala
+            files.forEach((f, i) => f.number = i + 1);
+            globalFileCounter = files.length;
+            renderFileList();
+            updateButtons();
+        }
+
+        function updateButtons() {
+            startBtn.disabled = files.length === 0 || !apiKeyInput.value.trim();
+            clearBtn.disabled = files.length === 0;
+        }
+
+        apiKeyInput.addEventListener('input', updateButtons);
+
+        function clearAll() {
+            files = [];
+            results = {};
+            failedFiles = [];
+            zipBlob = null;
+            globalFileCounter = 0;
+            fileList.innerHTML = '';
+            progressSection.classList.remove('active');
+            resultSection.classList.remove('active');
+            logSection.innerHTML = '';
+            updateButtons();
+        }
+
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString('tr-TR');
+            entry.textContent = `[${time}] ${message}`;
+            logSection.appendChild(entry);
+            logSection.scrollTop = logSection.scrollHeight;
+        }
+
+        function updateProgress(current, total, text) {
+            const percent = Math.round((current / total) * 100);
+            progressFill.style.width = `${percent}%`;
+            progressText.textContent = text || `${current}/${total} (${percent}%)`;
+        }
+
+        function updateFileStatus(id, status) {
+            const fileObj = files.find(f => f.id === id);
+            if (fileObj) {
+                fileObj.status = status;
+                const el = document.querySelector(`.file-item[data-id="${id}"]`);
+                if (el) {
+                    el.className = `file-item ${status}`;
+                    const statusEl = el.querySelector('.file-status');
+                    if (statusEl) {
+                        statusEl.className = `file-status ${status}`;
+                        statusEl.textContent = getStatusText(status);
+                    }
+                }
+            }
+        }
+
+        // Base64 dönüştürme
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Gemini API çağrısı
+        async function callGeminiOCR(base64Data, mimeType, apiKey) {
+            const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent';
+            
+            const payload = {
+                contents: [{
+                    parts: [
+                        {
+                            inline_data: {
+                                mime_type: mimeType,
+                                data: base64Data
+                            }
+                        },
+                        {
+                            text: "Bu görüntüdeki tüm metni aynen çıkar. Sadece metni ver, başka açıklama ekleme. Metin yoksa 'BOŞ SAYFA' yaz."
+                        }
+                    ]
+                }],
+                generationConfig: {
+                    temperature: 0.1,
+                    maxOutputTokens: 8192
+                }
+            };
+
+            const response = await fetch(`${endpoint}?key=${apiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.status === 429) {
+                throw new Error('RATE_LIMIT');
+            }
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+                return data.candidates[0].content.parts[0].text;
+            }
+            
+            throw new Error('Geçersiz API yanıtı');
+        }
+
+        // Delay fonksiyonu
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Ana OCR işlemi
+        async function startOCR() {
+            const apiKey = apiKeyInput.value.trim();
+            if (!apiKey) {
+                alert('Lütfen API anahtarı girin!');
+                return;
+            }
+
+            if (files.length === 0) {
+                alert('Lütfen dosya seçin!');
+                return;
+            }
+
+            // UI güncelle
+            startBtn.disabled = true;
+            clearBtn.disabled = true;
+            progressSection.classList.add('active');
+            resultSection.classList.remove('active');
+            logSection.innerHTML = '';
+            results = {};
+            failedFiles = [];
+
+            log('OCR işlemi başlatılıyor...', 'info');
+            log(`Toplam ${files.length} dosya işlenecek`, 'info');
+
+            // Sıralı işleme
+            const sortedFiles = [...files].sort((a, b) => a.number - b.number);
+            let processed = 0;
+            const retryQueue = [];
+
+            for (const fileObj of sortedFiles) {
+                updateFileStatus(fileObj.id, 'processing');
+                updateProgress(processed, files.length, `İşleniyor: Sayfa ${fileObj.number}`);
+                log(`Sayfa ${fileObj.number} işleniyor: ${fileObj.file.name}`, 'info');
+
+                try {
+                    const base64 = await fileToBase64(fileObj.file);
+                    const text = await callGeminiOCR(base64, fileObj.file.type, apiKey);
+                    
+                    results[fileObj.number] = text;
+                    fileObj.result = text;
+                    updateFileStatus(fileObj.id, 'success');
+                    log(`✅ Sayfa ${fileObj.number} başarıyla işlendi`, 'success');
+                    
+                } catch (error) {
+                    if (error.message === 'RATE_LIMIT') {
+                        log(`⚠️ Sayfa ${fileObj.number}: Rate limit, yeniden denenecek`, 'warning');
+                        updateFileStatus(fileObj.id, 'retry');
+                        retryQueue.push(fileObj);
+                    } else {
+                        log(`❌ Sayfa ${fileObj.number} hata: ${error.message}`, 'error');
+                        updateFileStatus(fileObj.id, 'error');
+                        retryQueue.push(fileObj);
+                    }
+                }
+
+                processed++;
+                updateProgress(processed, files.length);
+                
+                // Rate limit önleme - her istek arasında bekle
+                if (processed < files.length) {
+                    await delay(1500);
+                }
+            }
+
+            // Retry işlemi
+            if (retryQueue.length > 0) {
+                log(`🔄 ${retryQueue.length} dosya yeniden denenecek...`, 'warning');
+                await delay(5000); // 5 saniye bekle
+
+                for (const fileObj of retryQueue) {
+                    updateFileStatus(fileObj.id, 'processing');
+                    log(`Yeniden deneniyor: Sayfa ${fileObj.number}`, 'warning');
+
+                    try {
+                        const base64 = await fileToBase64(fileObj.file);
+                        const text = await callGeminiOCR(base64, fileObj.file.type, apiKey);
+                        
+                        results[fileObj.number] = text;
+                        fileObj.result = text;
+                        updateFileStatus(fileObj.id, 'success');
+                        log(`✅ Sayfa ${fileObj.number} başarılı (retry)`, 'success');
+                        
+                    } catch (error) {
+                        log(`❌ Sayfa ${fileObj.number} kalıcı hata: ${error.message}`, 'error');
+                        updateFileStatus(fileObj.id, 'error');
+                        failedFiles.push(fileObj.number);
+                    }
+
+                    await delay(2000);
+                }
+            }
+
+            // ZIP oluştur
+            log('ZIP dosyası oluşturuluyor...', 'info');
+            await createZip();
+            
+            // Sonuç göster
+            showResults();
+        }
+
+        async function createZip() {
+            const zip = new JSZip();
+            
+            // Sıralı numaralara göre txt dosyaları ekle
+            const sortedNumbers = Object.keys(results).map(Number).sort((a, b) => a - b);
+            
+            for (const num of sortedNumbers) {
+                const filename = `sayfa_${String(num).padStart(3, '0')}.txt`;
+                zip.file(filename, results[num]);
+            }
+
+            // Birleşik dosya oluştur
+            let combined = '';
+            for (const num of sortedNumbers) {
+                combined += `\n${'='.repeat(50)}\n`;
+                combined += `SAYFA ${num}\n`;
+                combined += `${'='.repeat(50)}\n\n`;
+                combined += results[num];
+                combined += '\n';
+            }
+            
+            zip.file('TUM_SAYFALAR.txt', combined.trim());
+
+            // ZIP blob oluştur
+            zipBlob = await zip.generateAsync({
+                type: 'blob',
+                compression: 'DEFLATE',
+                compressionOptions: { level: 6 }
+            });
+
+            log('✅ ZIP dosyası hazır!', 'success');
+        }
+
+        function showResults() {
+            progressSection.classList.remove('active');
+            resultSection.classList.add('active');
+
+            const successCount = Object.keys(results).length;
+            const failCount = failedFiles.length;
+
+            resultText.textContent = `${successCount} sayfa başarıyla işlendi.`;
+
+            if (failCount > 0) {
+                manualPages.style.display = 'block';
+                manualPages.innerHTML = `
+                    <strong>⚠️ ${failCount} sayfa işlenemedi:</strong><br>
+                    Sayfa ${failedFiles.join(', ')}<br>
+                    <small>Bu sayfaları manuel olarak yazmanız gerekebilir.</small>
+                `;
+            } else {
+                manualPages.style.display = 'none';
+            }
+
+            startBtn.disabled = false;
+            clearBtn.disabled = false;
+        }
+
+        function downloadZip() {
+            if (!zipBlob) {
+                alert('ZIP dosyası henüz hazır değil!');
+                return;
+            }
+
+            const timestamp = new Date().toISOString().slice(0, 10);
+            const filename = `pdf_ocr_${timestamp}.zip`;
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(zipBlob);
+            link.download = filename;
+            link.click();
+            
+            URL.revokeObjectURL(link.href);
+            log(`📥 ${filename} indirildi`, 'success');
+        }
+    </script>
+</body>
+</html>

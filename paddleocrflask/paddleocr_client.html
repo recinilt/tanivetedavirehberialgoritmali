@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📄 PaddleOCR 2.x - Yerel OCR Sunucusu</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #00d4ff, #0f3460);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+        .server-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ef4444;
+            animation: pulse-red 2s infinite;
+        }
+        .status-dot.connected {
+            background: #22c55e;
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+        }
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+        }
+        .settings {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .setting-group label {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        .setting-group select, .setting-group input {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #1e293b;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .drop-zone {
+            border: 3px dashed #334155;
+            border-radius: 16px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.02);
+            margin-bottom: 20px;
+        }
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+        }
+        .drop-zone-icon { font-size: 4rem; margin-bottom: 15px; }
+        .drop-zone-text { font-size: 1.1rem; color: #aaa; }
+        .drop-zone-hint { font-size: 0.85rem; color: #666; margin-top: 10px; }
+        .file-input { display: none; }
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .file-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .file-card:hover { background: rgba(255,255,255,0.08); }
+        .file-card.processing { border-color: #f59e0b; animation: pulse 1.5s infinite; }
+        .file-card.success { border-color: #22c55e; }
+        .file-card.error { border-color: #ef4444; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .file-number {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: linear-gradient(135deg, #00d4ff, #0f3460);
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .file-preview {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #1e293b;
+        }
+        .file-name {
+            font-size: 0.75rem;
+            color: #aaa;
+            word-break: break-all;
+            line-height: 1.3;
+            max-height: 50px;
+            overflow: hidden;
+        }
+        .file-status { margin-top: 8px; font-size: 0.85rem; }
+        .file-confidence { font-size: 0.75rem; color: #22c55e; margin-top: 4px; }
+        .file-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(239, 68, 68, 0.8);
+            border: none;
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .file-card:hover .file-remove { opacity: 1; }
+        .file-download {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(34, 197, 94, 0.9);
+            border: none;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .file-card:hover .file-download { opacity: 1; }
+        .file-card.success .file-download { opacity: 0.7; }
+        .file-card.success:hover .file-download { opacity: 1; }
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #0f3460);
+            color: #fff;
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        .btn-secondary:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .progress-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .progress-section.active { display: block; }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .progress-bar-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #0f3460);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        .progress-details {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        .stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: #22c55e; }
+        .stat-value.error { color: #ef4444; }
+        .stat-label { font-size: 0.8rem; color: #666; }
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid #00d4ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .info-box strong { color: #00d4ff; }
+        .info-box.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: #f59e0b;
+        }
+        .info-box.warning strong { color: #f59e0b; }
+        .log-section {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            border: 1px solid #334155;
+        }
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .log-entry.error { color: #ef4444; }
+        .log-entry.success { color: #22c55e; }
+        .log-entry.info { color: #00d4ff; }
+        .log-time { color: #666; margin-right: 10px; }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .loading-overlay.hidden { display: none; }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .retry-btn {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .files-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .controls { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div id="loadingText">Sunucuya bağlanılıyor...</div>
+        <button class="retry-btn" id="retryBtn" style="display: none;" onclick="checkServer()">🔄 Tekrar Dene</button>
+    </div>
+
+    <div class="container">
+        <h1>📄 PaddleOCR 2.x - Yerel OCR Sunucusu</h1>
+        <p class="subtitle">Stabil PaddleOCR 2.7.3 + PaddlePaddle 2.5.2 - Türkçe dahil 80+ dil</p>
+
+        <div class="server-status">
+            <div class="status-dot" id="statusDot"></div>
+            <span class="status-text" id="statusText">Sunucu durumu kontrol ediliyor...</span>
+        </div>
+
+        <div class="info-box">
+            <strong>✨ PaddleOCR 2.x:</strong> Stabil ve test edilmiş sürüm.<br>
+            <strong>🇹🇷 Türkçe:</strong> "Latin (Türkçe dahil)" seçeneğini kullanın - ş, ğ, ü, ö, ç, ı karakterlerini tanır.<br>
+            <strong>📦 Çıktı:</strong> İşlem bitince otomatik ZIP indirilir (tekli + birleşik + JSON).
+        </div>
+
+        <div class="info-box warning" id="serverWarning" style="display: none;">
+            <strong>⚠️ Sunucu Bağlantısı:</strong> Flask sunucusunun çalıştığından emin olun.<br>
+            <code>python paddleocr_server.py</code> komutu ile başlatın.
+        </div>
+
+        <div class="settings">
+            <div class="setting-group">
+                <label>🌐 OCR Dili</label>
+                <select id="langSelect">
+                    <option value="latin" selected>🇹🇷 Latin (Türkçe dahil)</option>
+                    <option value="en">🇬🇧 English</option>
+                    <option value="ch">🇨🇳 Chinese</option>
+                    <option value="french">🇫🇷 Français</option>
+                    <option value="german">🇩🇪 Deutsch</option>
+                    <option value="korean">🇰🇷 Korean</option>
+                    <option value="japan">🇯🇵 Japanese</option>
+                    <option value="arabic">🇸🇦 Arabic</option>
+                    <option value="cyrillic">🇷🇺 Cyrillic</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label>🔗 Sunucu Adresi</label>
+                <input type="text" id="serverUrl" value="http://localhost:5000" style="width: 200px;">
+            </div>
+        </div>
+
+        <div class="drop-zone" id="dropZone">
+            <div class="drop-zone-icon">🖼️</div>
+            <div class="drop-zone-text">PDF sayfalarının resimlerini buraya sürükleyin</div>
+            <div class="drop-zone-text">veya tıklayarak seçin</div>
+            <div class="drop-zone-hint">💡 Dosyalar otomatik sıralanır</div>
+        </div>
+        <input type="file" id="fileInput" class="file-input" multiple accept="image/*">
+
+        <div class="files-grid" id="filesGrid"></div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="startBtn" disabled>🚀 OCR Başlat</button>
+            <button class="btn btn-secondary" id="clearBtn" disabled>🗑️ Temizle</button>
+            <button class="btn btn-success" id="downloadBtn" disabled>📦 ZIP İndir (Tümü)</button>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-header">
+                <span id="progressText">Hazırlanıyor...</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-details">
+                <span>⏱️ Geçen: <span id="elapsedTime">00:00</span></span>
+                <span>📄 İşlenen: <span id="processedCount">0</span> / <span id="totalCount">0</span></span>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="successCount">0</div>
+                    <div class="stat-label">✅ Başarılı</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value error" id="errorCount">0</div>
+                    <div class="stat-label">❌ Hatalı</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="avgTime">0s</div>
+                    <div class="stat-label">⚡ Ort. Süre</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="avgConfidence">0%</div>
+                    <div class="stat-label">🎯 Ort. Güven</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="log-section" id="logSection"></div>
+    </div>
+
+    <script>
+        let files = [];
+        let results = [];
+        let isProcessing = false;
+        let startTime = null;
+        let serverConnected = false;
+
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+        const retryBtn = document.getElementById('retryBtn');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const serverWarning = document.getElementById('serverWarning');
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const filesGrid = document.getElementById('filesGrid');
+        const startBtn = document.getElementById('startBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const progressSection = document.getElementById('progressSection');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const progressPercent = document.getElementById('progressPercent');
+        const logSection = document.getElementById('logSection');
+        const langSelect = document.getElementById('langSelect');
+        const serverUrl = document.getElementById('serverUrl');
+
+        async function checkServer() {
+            loadingText.textContent = 'Sunucuya bağlanılıyor...';
+            retryBtn.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${serverUrl.value}/health`, { 
+                    method: 'GET',
+                    signal: AbortSignal.timeout(5000)
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    serverConnected = true;
+                    statusDot.classList.add('connected');
+                    statusText.textContent = `✅ Sunucu bağlı (PaddleOCR 2.x)`;
+                    serverWarning.style.display = 'none';
+                    loadingOverlay.classList.add('hidden');
+                    log('✅ PaddleOCR 2.x sunucusuna bağlandı', 'success');
+                    updateButtons();
+                } else {
+                    throw new Error('Sunucu yanıt vermiyor');
+                }
+            } catch (error) {
+                serverConnected = false;
+                statusDot.classList.remove('connected');
+                statusText.textContent = '❌ Sunucu bağlantısı yok';
+                serverWarning.style.display = 'block';
+                loadingText.textContent = 'Sunucuya bağlanılamadı!';
+                retryBtn.style.display = 'block';
+                log('❌ Sunucu bağlantısı başarısız: ' + error.message, 'error');
+                setTimeout(() => loadingOverlay.classList.add('hidden'), 2000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkServer();
+            setInterval(checkServer, 30000);
+        });
+
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+        startBtn.addEventListener('click', startOCR);
+        clearBtn.addEventListener('click', clearAll);
+        downloadBtn.addEventListener('click', downloadAsZip);
+
+        function handleFiles(fileList) {
+            const newFiles = Array.from(fileList)
+                .filter(f => f.type.startsWith('image/'))
+                .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+            if (newFiles.length === 0) { log('⚠️ Geçerli resim dosyası bulunamadı', 'error'); return; }
+            files = [...files, ...newFiles];
+            log(`📁 ${newFiles.length} dosya eklendi (Toplam: ${files.length})`, 'info');
+            renderFiles();
+            updateButtons();
+        }
+
+        function renderFiles() {
+            filesGrid.innerHTML = files.map((file, index) => {
+                const status = file.status || 'waiting';
+                const confidence = file.confidence || 0;
+                const statusEmoji = { 'waiting': '⏳ Bekliyor', 'processing': '🔄 İşleniyor', 'success': '✅ Tamamlandı', 'error': '❌ Hata' }[status];
+                const downloadButton = status === 'success' ? `<button class="file-download" onclick="window.downloadSingle(${index})" title="Bu sayfayı indir">💾</button>` : '';
+                const confidenceHtml = status === 'success' && confidence > 0 ? `<div class="file-confidence">🎯 ${confidence.toFixed(1)}%</div>` : '';
+                return `
+                    <div class="file-card ${status}" id="card-${index}">
+                        <div class="file-number">${index + 1}</div>
+                        <button class="file-remove" onclick="window.removeFile(${index})">✕</button>
+                        ${downloadButton}
+                        <img class="file-preview" src="${URL.createObjectURL(file)}" alt="${file.name}">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-status">${statusEmoji}</div>
+                        ${confidenceHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.removeFile = function(index) {
+            if (isProcessing) return;
+            files.splice(index, 1);
+            results.splice(index, 1);
+            renderFiles();
+            updateButtons();
+            log(`🗑️ Dosya kaldırıldı`, 'info');
+        };
+
+        window.downloadSingle = function(index) {
+            const result = results[index];
+            if (!result || !result.text) { log(`⚠️ Sayfa ${index + 1} için sonuç yok`, 'error'); return; }
+            const baseName = result.filename.replace(/\.[^/.]+$/, '');
+            const blob = new Blob([result.text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${baseName}_ocr.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            log(`💾 Sayfa ${index + 1} indirildi`, 'success');
+        };
+
+        function updateButtons() {
+            startBtn.disabled = files.length === 0 || isProcessing || !serverConnected;
+            clearBtn.disabled = files.length === 0 || isProcessing;
+            downloadBtn.disabled = !results.filter(r => r && r.text).length;
+        }
+
+        function clearAll() {
+            if (isProcessing) return;
+            files = [];
+            results = [];
+            filesGrid.innerHTML = '';
+            progressSection.classList.remove('active');
+            updateButtons();
+            log('🧹 Tüm dosyalar temizlendi', 'info');
+        }
+
+        function log(message, type = '') {
+            const time = new Date().toLocaleTimeString('tr-TR');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<span class="log-time">[${time}]</span>${message}`;
+            logSection.appendChild(entry);
+            logSection.scrollTop = logSection.scrollHeight;
+        }
+
+        function updateProgress(current, total, text) {
+            const percent = Math.round((current / total) * 100);
+            progressBar.style.width = `${percent}%`;
+            progressPercent.textContent = `${percent}%`;
+            progressText.textContent = text;
+            document.getElementById('processedCount').textContent = current;
+            document.getElementById('totalCount').textContent = total;
+            if (startTime) {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('elapsedTime').textContent = `${Math.floor(elapsed / 60).toString().padStart(2, '0')}:${(elapsed % 60).toString().padStart(2, '0')}`;
+            }
+        }
+
+        function updateStats(successCount, errorCount, avgTime, avgConfidence) {
+            document.getElementById('successCount').textContent = successCount;
+            document.getElementById('errorCount').textContent = errorCount;
+            document.getElementById('avgTime').textContent = `${avgTime.toFixed(1)}s`;
+            document.getElementById('avgConfidence').textContent = `${avgConfidence.toFixed(1)}%`;
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function startOCR() {
+            if (files.length === 0 || isProcessing || !serverConnected) return;
+            isProcessing = true;
+            startTime = Date.now();
+            results = new Array(files.length).fill(null);
+            progressSection.classList.add('active');
+            updateButtons();
+            
+            const lang = langSelect.value;
+            log(`🚀 OCR başlatılıyor (Dil: ${lang})`, 'info');
+            log(`📄 Toplam ${files.length} dosya işlenecek`, 'info');
+
+            let successCount = 0, errorCount = 0, totalTime = 0, totalConfidence = 0;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                files[i].status = 'processing';
+                renderFiles();
+                updateProgress(i, files.length, `Sayfa ${i + 1} işleniyor: ${file.name}`);
+                log(`📄 Sayfa ${i + 1} işleniyor: ${file.name}`, 'info');
+
+                try {
+                    const base64Data = await fileToBase64(file);
+                    const response = await fetch(`${serverUrl.value}/ocr`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ image: base64Data, lang: lang, filename: file.name })
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        results[i] = { page: i + 1, filename: file.name, text: data.text, confidence: data.confidence, line_count: data.line_count, processing_time: data.processing_time };
+                        files[i].status = 'success';
+                        files[i].confidence = data.confidence;
+                        successCount++;
+                        totalTime += data.processing_time;
+                        totalConfidence += data.confidence;
+                        log(`✅ Sayfa ${i + 1} tamamlandı (${data.processing_time.toFixed(1)}s, güven: ${data.confidence.toFixed(1)}%, ${data.line_count} satır)`, 'success');
+                    } else {
+                        throw new Error(data.error || 'Bilinmeyen hata');
+                    }
+                } catch (err) {
+                    files[i].status = 'error';
+                    errorCount++;
+                    results[i] = { page: i + 1, filename: file.name, text: '', error: err.message };
+                    log(`❌ Sayfa ${i + 1} hata: ${err.message}`, 'error');
+                }
+
+                renderFiles();
+                updateStats(successCount, errorCount, successCount > 0 ? totalTime / successCount : 0, successCount > 0 ? totalConfidence / successCount : 0);
+                updateProgress(i + 1, files.length, `${i + 1}/${files.length} tamamlandı`);
+            }
+
+            isProcessing = false;
+            updateButtons();
+            log(`🎉 OCR tamamlandı! (${successCount} başarılı, ${errorCount} hatalı)`, 'success');
+            if (successCount > 0) { log(`📦 ZIP otomatik indiriliyor...`, 'info'); setTimeout(() => downloadAsZip(), 500); }
+        }
+
+        async function downloadAsZip() {
+            const validResults = results.filter(r => r && r.text);
+            if (validResults.length === 0) { log('⚠️ İndirilecek sonuç yok', 'error'); return; }
+            log(`📦 ZIP dosyası oluşturuluyor...`, 'info');
+            downloadBtn.disabled = true;
+            downloadBtn.innerHTML = '⏳ ZIP Oluşturuluyor...';
+
+            try {
+                const zip = new JSZip();
+                const folder = zip.folder("paddleocr-sonuclari");
+
+                // Tekil dosyalar
+                for (const result of results) {
+                    if (!result) continue;
+                    const baseName = result.filename.replace(/\.[^/.]+$/, '');
+                    if (result.text) folder.file(`${baseName}_ocr.txt`, result.text);
+                    else if (result.error) folder.file(`${baseName}_HATA.txt`, `Hata: ${result.error}`);
+                }
+
+                // Birleşik dosya
+                const combinedContent = results.filter(r => r).map(r => {
+                    const header = `\n${'='.repeat(60)}\n📄 SAYFA ${r.page}: ${r.filename}\n${'='.repeat(60)}\n`;
+                    return r.error ? header + `[HATA: ${r.error}]\n` : header + r.text;
+                }).join('\n');
+                
+                folder.file('_TUM_SAYFALAR_BIRLESIK.txt', combinedContent);
+                folder.file('_sonuclar.json', JSON.stringify(results, null, 2));
+
+                const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } });
+                const filename = `paddleocr-sonuclari_${new Date().toISOString().slice(0, 10)}.zip`;
+                const url = URL.createObjectURL(zipBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                log(`✅ ZIP indirildi: ${filename}`, 'success');
+            } catch (err) {
+                log(`❌ ZIP oluşturma hatası: ${err.message}`, 'error');
+            } finally {
+                downloadBtn.disabled = false;
+                downloadBtn.innerHTML = '📦 ZIP İndir (Tümü)';
+            }
+        }
+
+        log('👋 PaddleOCR 2.x arayüzü hazır. Sunucu bağlantısı bekleniyor...', 'info');
+    </script>
+</body>
+</html>
