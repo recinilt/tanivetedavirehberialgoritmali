@@ -545,8 +545,8 @@
     </div>
     
     <script>
-        // Kategorileri çıkar (undefined olanları filtrele)
-        const kategoriler = [...new Set(semptomlar.filter(s => s && s.kategori).map(s => s.kategori))].sort((a, b) => a.localeCompare(b, 'tr'));
+        // Kategorileri çıkar
+        const kategoriler = [...new Set(semptomlar.map(s => s.kategori))].sort((a, b) => a.localeCompare(b, 'tr'));
         
         // Seçilen semptomlar ve aktif kategori
         let selectedSemptomlar = [];
@@ -589,15 +589,14 @@
             const search = document.getElementById('semptomSearch').value.toLowerCase().trim();
             const container = document.getElementById('semptomList');
             
-            // Geçerli semptomları filtrele (undefined olanları çıkar)
-            let filtered = semptomlar.filter(s => s && s.ad && s.kategori);
+            let filtered = semptomlar;
             
             // Kategori filtresi
             if (activeKategori !== 'Tümü') {
                 filtered = filtered.filter(s => s.kategori === activeKategori);
             }
             
-            // Arama filtresi (herhangi bir yerinde geçiyorsa kabul)
+            // Arama filtresi
             if (search) {
                 filtered = filtered.filter(s => s.ad.toLowerCase().includes(search));
             }

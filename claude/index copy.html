@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>1. Basamak Tanı Tedavi Rehberi</title>
+    <script src="ttr_3.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --purple: #7c3aed;
+            --purple-dark: #6d28d9;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-900);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 0;
+            background: white;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .header-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .header-btn:active {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* Acil Banner */
+        .acil-banner {
+            background: var(--danger);
+            color: white;
+            padding: 12px 16px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+        
+        .acil-banner.show {
+            display: flex;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        /* Sections */
+        .section {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-500);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Hasta Bilgisi */
+        .hasta-row {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .input-group {
+            flex: 1;
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-bottom: 4px;
+        }
+        
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+        }
+        
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        /* Seçilen Öğeler */
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-height: 40px;
+        }
+        
+        .chip {
+            background: var(--primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: chipIn 0.2s ease;
+        }
+        
+        .chip.tahlil-chip {
+            background: var(--purple);
+        }
+        
+        @keyframes chipIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .chip-remove {
+            background: rgba(255,255,255,0.3);
+            border: none;
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+        }
+        
+        .empty-chips {
+            color: var(--gray-500);
+            font-size: 14px;
+            font-style: italic;
+        }
+        
+        /* Tab Sistemi */
+        .tab-container {
+            display: flex;
+            border-bottom: 2px solid var(--gray-200);
+            margin-bottom: 12px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-500);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary);
+        }
+        
+        .tab-btn.active.tahlil-tab {
+            color: var(--purple);
+        }
+        
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+        
+        .tab-btn.tahlil-tab::after {
+            background: var(--purple);
+        }
+        
+        .tab-btn.active::after {
+            transform: scaleX(1);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-badge {
+            background: var(--primary);
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+        }
+        
+        .tab-btn.tahlil-tab .tab-badge {
+            background: var(--purple);
+        }
+        
+        /* Arama Kutusu */
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        /* Kategori Butonları */
+        .body-regions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .body-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--gray-300);
+            background: white;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .body-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .body-btn.tahlil-cat.active {
+            background: var(--purple);
+            border-color: var(--purple);
+        }
+        
+        /* Semptom/Tahlil Listesi */
+        .semptom-list {
+            max-height: 280px;
+            overflow-y: auto;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+        }
+        
+        .semptom-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        
+        .semptom-item:last-child {
+            border-bottom: none;
+        }
+        
+        .semptom-item:active {
+            background: var(--gray-100);
+        }
+        
+        .semptom-item.selected {
+            background: #eff6ff;
+        }
+        
+        .semptom-item.selected.tahlil-item {
+            background: #f3e8ff;
+        }
+        
+        .semptom-emoji {
+            font-size: 20px;
+            width: 28px;
+            text-align: center;
+        }
+        
+        .semptom-info {
+            flex: 1;
+        }
+        
+        .semptom-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .semptom-cat {
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+        
+        .semptom-check {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--gray-300);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: transparent;
+        }
+        
+        .semptom-item.selected .semptom-check {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .semptom-item.selected.tahlil-item .semptom-check {
+            background: var(--purple);
+            border-color: var(--purple);
+        }
+        
+        /* Sonuçlar */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .results-count {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+        
+        .hastalik-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+        
+        .hastalik-card.acil {
+            border-color: var(--danger);
+            border-width: 2px;
+        }
+        
+        .hastalik-header {
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .hastalik-info {
+            flex: 1;
+        }
+        
+        .hastalik-name {
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .acil-badge {
+            background: var(--danger);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        
+        .hastalik-meta {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+        
+        .icd-code {
+            background: var(--gray-100);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin-right: 8px;
+        }
+        
+        .hastalik-score {
+            font-size: 20px;
+            font-weight: 700;
+            padding: 8px 12px;
+            border-radius: 8px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .hastalik-score.high {
+            background: #dcfce7;
+            color: var(--success);
+        }
+        
+        .hastalik-score.medium {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+        
+        .hastalik-score.low {
+            background: var(--gray-100);
+            color: var(--gray-500);
+        }
+        
+        .match-info {
+            padding: 0 14px 14px;
+            font-size: 12px;
+        }
+        
+        .match-label {
+            color: var(--gray-500);
+        }
+        
+        .match-yes {
+            color: var(--success);
+        }
+        
+        .match-no {
+            color: var(--gray-500);
+        }
+        
+        .match-tahlil {
+            color: var(--purple);
+        }
+        
+        .hastalik-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: var(--gray-50);
+        }
+        
+        .hastalik-content.open {
+            max-height: 1200px;
+        }
+        
+        .detail-section {
+            padding: 14px;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .detail-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: var(--gray-700);
+        }
+        
+        .ilac-table {
+            width: 100%;
+            font-size: 13px;
+            border-collapse: collapse;
+        }
+        
+        .ilac-table th,
+        .ilac-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .ilac-table th {
+            background: var(--gray-100);
+            font-weight: 600;
+        }
+        
+        .sevk-list {
+            list-style: none;
+            font-size: 13px;
+        }
+        
+        .sevk-list li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .sevk-list li::before {
+            content: "•";
+            position: absolute;
+            left: 6px;
+            color: var(--primary);
+        }
+        
+        .sevk-list li.acil::before {
+            content: "⚠️";
+            left: 0;
+        }
+        
+        /* Bulgu Listesi (Detay içi) */
+        .bulgu-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .bulgu-item {
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .bulgu-item.selected {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #86efac;
+        }
+        
+        .bulgu-item.missing {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        
+        .bulgu-item .bulgu-icon {
+            font-size: 10px;
+        }
+        
+        .bulgu-item.patog {
+            font-weight: 600;
+        }
+        
+        .bulgu-item.patog::after {
+            content: "🎯";
+            font-size: 10px;
+            margin-left: 2px;
+        }
+        
+        /* Boş Durum */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-500);
+        }
+        
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            font-size: 16px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+        
+        .modal-body {
+            padding: 16px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .kayit-item {
+            padding: 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .kayit-info h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .kayit-info p {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        
+        .kayit-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .kayit-btn {
+            padding: 6px 10px;
+            border: 1px solid var(--gray-300);
+            background: white;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        /* Patognomonik Badge */
+        .patog-badge {
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+        }
+        
+        /* Print */
+        @media print {
+            header, .section:not(.results-section) {
+                display: none !important;
+            }
+            .hastalik-content {
+                max-height: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏥 1. Basamak Tanı Tedavi Rehberi</h1>
+            <div class="header-actions">
+                <button class="header-btn" onclick="showKayitModal()">📋 Kayıtlar</button>
+                <button class="header-btn" onclick="saveCurrentPatient()">💾 Kaydet</button>
+                <button class="header-btn" onclick="printResults()">🖨️ Yazdır</button>
+                <button class="header-btn" onclick="resetAll()">🔄 Sıfırla</button>
+            </div>
+        </header>
+        
+        <div class="acil-banner" id="acilBanner">
+            🚨 ACİL SEVK GEREKTİREBİLECEK DURUM TESPİT EDİLDİ!
+        </div>
+        
+        <!-- Hasta Bilgisi -->
+        <div class="section">
+            <div class="section-title">Hasta Bilgisi</div>
+            <div class="hasta-row">
+                <div class="input-group">
+                    <label>Ad Soyad</label>
+                    <input type="text" id="hastaAdiInput" placeholder="Opsiyonel">
+                </div>
+                <div class="input-group" style="max-width: 80px;">
+                    <label>Yaş</label>
+                    <input type="number" id="yasInput" placeholder="--">
+                </div>
+                <div class="input-group" style="max-width: 100px;">
+                    <label>Cinsiyet</label>
+                    <select id="cinsiyetSelect">
+                        <option value="">--</option>
+                        <option value="Erkek">Erkek</option>
+                        <option value="Kadın">Kadın</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seçilenler -->
+        <div class="section">
+            <div class="section-title">Seçilen Bulgular</div>
+            <div class="chips-container" id="chipsContainer">
+                <span class="empty-chips">Semptom veya tahlil seçin...</span>
+            </div>
+        </div>
+        
+        <!-- Tab Sistemi -->
+        <div class="section">
+            <div class="tab-container">
+                <button class="tab-btn active" data-tab="semptomlar" onclick="switchTab('semptomlar')">
+                    🩺 Semptomlar <span class="tab-badge" id="semptomBadge">0</span>
+                </button>
+                <button class="tab-btn tahlil-tab" data-tab="tahliller" onclick="switchTab('tahliller')">
+                    🔬 Tahliller <span class="tab-badge" id="tahlilBadge">0</span>
+                </button>
+            </div>
+            
+            <!-- Semptomlar Tab -->
+            <div class="tab-content active" id="semptomlarTab">
+                <div class="search-box">
+                    <input type="text" id="semptomSearch" placeholder="Semptom ara..." oninput="renderSemptomlar()">
+                </div>
+                
+                <div class="body-regions" id="bodyRegions"></div>
+                
+                <div class="semptom-list" id="semptomList"></div>
+            </div>
+            
+            <!-- Tahliller Tab -->
+            <div class="tab-content" id="tahlillerTab">
+                <div class="search-box">
+                    <input type="text" id="tahlilSearch" placeholder="Tahlil ara..." oninput="renderTahliller()">
+                </div>
+                
+                <div class="body-regions" id="tahlilRegions"></div>
+                
+                <div class="semptom-list" id="tahlilList"></div>
+            </div>
+        </div>
+        
+        <!-- Sonuçlar -->
+        <div class="section results-section">
+            <div class="results-header">
+                <div class="section-title" style="margin-bottom: 0;">Olası Tanılar</div>
+                <div class="results-count" id="resultsCount">0 sonuç</div>
+            </div>
+            <div id="resultsContainer">
+                <div class="empty-state">
+                    <div class="icon">👆</div>
+                    <p>Semptom ve/veya tahlil seçerek başlayın</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Kayıt Modal -->
+        <div class="modal" id="kayitModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📋 Hasta Kayıtları</h3>
+                    <button class="modal-close" onclick="hideKayitModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="kayitList"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ICD-10 Kodları
+        const ICD10_CODES = {
+            "Akut Romatizmal Ateş": "I00-I02",
+            "Akciğer Tüberkülozu": "A15",
+            "Pnömoni (Erişkin)": "J18.9",
+            "Pnömoni (Çocuk)": "J18.9",
+            "Tonsillofarenjit": "J03.9",
+            "Akut Otitis Media": "H66.9",
+            "Akut Viral Hepatit": "B19.9",
+            "Bruselloz": "A23",
+            "Sıtma": "B54",
+            "İdrar Yolu Enfeksiyonu": "N39.0",
+            "Akut Menenjit": "G03.9",
+            "Febril Konvülsiyon": "R56.0",
+            "Migren": "G43",
+            "Hipertansiyon": "I10",
+            "Diabetes Mellitus": "E11",
+            "Demir Eksikliği Anemisi": "D50",
+            "Kalp Yetmezliği": "I50",
+            "KOAH": "J44",
+            "Astım": "J45",
+            "Peptik Ülser": "K27",
+            "Depresyon": "F32",
+            "Anksiyete Bozuklukları": "F41",
+            "Hipotiroidi": "E03",
+            "Hipertiroidi": "E05",
+            "Vertigo (Periferik)": "H81",
+            "Epilepsi": "G40",
+            "Akut Miyokard Enfarktüsü": "I21",
+            "Anjina Pektoris": "I20"
+        };
+        
+        // State
+        let selectedSemptomlar = [];
+        let selectedTahliller = [];
+        let currentBodyRegion = 'all';
+        let currentTahlilKategori = 'all';
+        let currentTab = 'semptomlar';
+        let savedPatients = JSON.parse(localStorage.getItem('hastaKayitlari') || '[]');
+        
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', () => {
+            initBodyRegions();
+            initTahlilRegions();
+            renderSemptomlar();
+            renderTahliller();
+        });
+        
+        // Tab değiştir
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === tab + 'Tab');
+            });
+        }
+        
+        // Semptom kategorileri
+        function initBodyRegions() {
+            const kategoriler = [...new Set(ttr.semptomlar.map(s => s.kategori))];
+            const container = document.getElementById('bodyRegions');
+            
+            container.innerHTML = `
+                <button class="body-btn active" data-region="all" onclick="selectBodyRegion('all')">Tümü</button>
+                ${kategoriler.map(k => `
+                    <button class="body-btn" data-region="${k}" onclick="selectBodyRegion('${k}')">${k}</button>
+                `).join('')}
+            `;
+        }
+        
+        // Tahlil kategorileri
+        function initTahlilRegions() {
+            const kategoriler = [...new Set(ttr.tahliller.map(t => t.kategori))];
+            const container = document.getElementById('tahlilRegions');
+            
+            container.innerHTML = `
+                <button class="body-btn tahlil-cat active" data-region="all" onclick="selectTahlilKategori('all')">Tümü</button>
+                ${kategoriler.map(k => `
+                    <button class="body-btn tahlil-cat" data-region="${k}" onclick="selectTahlilKategori('${k}')">${k}</button>
+                `).join('')}
+            `;
+        }
+        
+        // Kategori seçimi
+        function selectBodyRegion(region) {
+            currentBodyRegion = region;
+            document.querySelectorAll('#bodyRegions .body-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.region === region);
+            });
+            renderSemptomlar();
+        }
+        
+        function selectTahlilKategori(kategori) {
+            currentTahlilKategori = kategori;
+            document.querySelectorAll('#tahlilRegions .body-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.region === kategori);
+            });
+            renderTahliller();
+        }
+        
+        // Semptomları render et
+        function renderSemptomlar() {
+            const search = document.getElementById('semptomSearch').value.toLowerCase();
+            const container = document.getElementById('semptomList');
+            
+            let filtered = ttr.semptomlar.filter(s => {
+                const matchSearch = s.ad.toLowerCase().includes(search);
+                const matchRegion = currentBodyRegion === 'all' || s.kategori === currentBodyRegion;
+                return matchSearch && matchRegion;
+            });
+            
+            container.innerHTML = filtered.map(s => {
+                const isSelected = selectedSemptomlar.some(sel => sel.id === s.id);
+                return `
+                    <div class="semptom-item ${isSelected ? 'selected' : ''}" onclick="toggleSemptom('${s.id}')">
+                        <span class="semptom-emoji">${s.emoji || '🔹'}</span>
+                        <div class="semptom-info">
+                            <div class="semptom-name">${s.ad}</div>
+                            <div class="semptom-cat">${s.kategori}</div>
+                        </div>
+                        <div class="semptom-check">✓</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Tahlilleri render et
+        function renderTahliller() {
+            const search = document.getElementById('tahlilSearch').value.toLowerCase();
+            const container = document.getElementById('tahlilList');
+            
+            let filtered = ttr.tahliller.filter(t => {
+                const matchSearch = t.ad.toLowerCase().includes(search);
+                const matchKategori = currentTahlilKategori === 'all' || t.kategori === currentTahlilKategori;
+                return matchSearch && matchKategori;
+            });
+            
+            container.innerHTML = filtered.map(t => {
+                const isSelected = selectedTahliller.some(sel => sel.id === t.id);
+                // Patognomonik kontrol
+                const hasPatog = Object.values(t.hastaliklar).some(h => h.patognomonik === true);
+                return `
+                    <div class="semptom-item tahlil-item ${isSelected ? 'selected' : ''}" onclick="toggleTahlil('${t.id}')">
+                        <span class="semptom-emoji">🔬</span>
+                        <div class="semptom-info">
+                            <div class="semptom-name">
+                                ${t.ad}
+                                ${hasPatog ? '<span class="patog-badge">Patognomonik</span>' : ''}
+                            </div>
+                            <div class="semptom-cat">${t.kategori}</div>
+                        </div>
+                        <div class="semptom-check">✓</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Semptom toggle
+        function toggleSemptom(id) {
+            const semptom = ttr.semptomlar.find(s => s.id === id);
+            if (!semptom) return;
+            
+            const idx = selectedSemptomlar.findIndex(s => s.id === id);
+            if (idx === -1) {
+                selectedSemptomlar.push(semptom);
+            } else {
+                selectedSemptomlar.splice(idx, 1);
+            }
+            
+            updateChips();
+            renderSemptomlar();
+            updateResults();
+        }
+        
+        // Tahlil toggle
+        function toggleTahlil(id) {
+            const tahlil = ttr.tahliller.find(t => t.id === id);
+            if (!tahlil) return;
+            
+            const idx = selectedTahliller.findIndex(t => t.id === id);
+            if (idx === -1) {
+                selectedTahliller.push(tahlil);
+            } else {
+                selectedTahliller.splice(idx, 1);
+            }
+            
+            updateChips();
+            renderTahliller();
+            updateResults();
+        }
+        
+        // Chips güncelle
+        function updateChips() {
+            const container = document.getElementById('chipsContainer');
+            document.getElementById('semptomBadge').textContent = selectedSemptomlar.length;
+            document.getElementById('tahlilBadge').textContent = selectedTahliller.length;
+            
+            if (selectedSemptomlar.length === 0 && selectedTahliller.length === 0) {
+                container.innerHTML = '<span class="empty-chips">Semptom veya tahlil seçin...</span>';
+                return;
+            }
+            
+            let html = '';
+            
+            // Semptom chips
+            selectedSemptomlar.forEach(s => {
+                html += `
+                    <span class="chip">
+                        ${s.emoji || '🔹'} ${s.ad}
+                        <button class="chip-remove" onclick="event.stopPropagation(); toggleSemptom('${s.id}')">×</button>
+                    </span>
+                `;
+            });
+            
+            // Tahlil chips
+            selectedTahliller.forEach(t => {
+                html += `
+                    <span class="chip tahlil-chip">
+                        🔬 ${t.ad}
+                        <button class="chip-remove" onclick="event.stopPropagation(); toggleTahlil('${t.id}')">×</button>
+                    </span>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Hastalığa ait tüm semptom ve tahlilleri bul
+        function getHastalikBulgulari(hastalikAd) {
+            const bulgular = {
+                semptomlar: [],
+                tahliller: []
+            };
+            
+            // Semptomları bul
+            ttr.semptomlar.forEach(s => {
+                if (s.hastaliklar && s.hastaliklar[hastalikAd]) {
+                    const info = s.hastaliklar[hastalikAd];
+                    const isSelected = selectedSemptomlar.some(sel => sel.id === s.id);
+                    bulgular.semptomlar.push({
+                        ad: s.ad,
+                        id: s.id,
+                        agirlik: info.agirlik,
+                        patognomonik: info.patognomonik,
+                        selected: isSelected
+                    });
+                }
+            });
+            
+            // Tahlilleri bul
+            ttr.tahliller.forEach(t => {
+                if (t.hastaliklar && t.hastaliklar[hastalikAd]) {
+                    const info = t.hastaliklar[hastalikAd];
+                    const isSelected = selectedTahliller.some(sel => sel.id === t.id);
+                    bulgular.tahliller.push({
+                        ad: t.ad,
+                        id: t.id,
+                        agirlik: info.agirlik,
+                        patognomonik: info.patognomonik,
+                        selected: isSelected
+                    });
+                }
+            });
+            
+            // Ağırlığa göre sırala
+            bulgular.semptomlar.sort((a, b) => b.agirlik - a.agirlik);
+            bulgular.tahliller.sort((a, b) => b.agirlik - a.agirlik);
+            
+            return bulgular;
+        }
+        
+        // Sonuçları güncelle
+        function updateResults() {
+            const container = document.getElementById('resultsContainer');
+            const countEl = document.getElementById('resultsCount');
+            const acilBanner = document.getElementById('acilBanner');
+            
+            if (selectedSemptomlar.length === 0 && selectedTahliller.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">👆</div>
+                        <p>Semptom ve/veya tahlil seçerek başlayın</p>
+                    </div>
+                `;
+                countEl.textContent = '0 sonuç';
+                acilBanner.classList.remove('show');
+                return;
+            }
+            
+            // Tüm hastalıkları topla
+            const hastalikScores = {};
+            
+            // Semptomlardan gelen hastalıklar
+            selectedSemptomlar.forEach(semptom => {
+                Object.entries(semptom.hastaliklar).forEach(([hastalikAd, info]) => {
+                    if (!hastalikScores[hastalikAd]) {
+                        hastalikScores[hastalikAd] = {
+                            ad: hastalikAd,
+                            semptomScore: 0,
+                            tahlilScore: 0,
+                            matchedSemptomlar: [],
+                            matchedTahliller: [],
+                            patognomonikTahlil: false
+                        };
+                    }
+                    hastalikScores[hastalikAd].semptomScore += info.agirlik;
+                    hastalikScores[hastalikAd].matchedSemptomlar.push(semptom.ad);
+                });
+            });
+            
+            // Tahlillerden gelen hastalıklar
+            selectedTahliller.forEach(tahlil => {
+                Object.entries(tahlil.hastaliklar).forEach(([hastalikAd, info]) => {
+                    if (!hastalikScores[hastalikAd]) {
+                        hastalikScores[hastalikAd] = {
+                            ad: hastalikAd,
+                            semptomScore: 0,
+                            tahlilScore: 0,
+                            matchedSemptomlar: [],
+                            matchedTahliller: [],
+                            patognomonikTahlil: false
+                        };
+                    }
+                    hastalikScores[hastalikAd].tahlilScore += info.agirlik;
+                    hastalikScores[hastalikAd].matchedTahliller.push(tahlil.ad);
+                    
+                    // Patognomonik tahlil kontrolü
+                    if (info.patognomonik === true) {
+                        hastalikScores[hastalikAd].patognomonikTahlil = true;
+                    }
+                });
+            });
+            
+            // Skorları hesapla
+            let results = Object.values(hastalikScores).map(h => {
+                let totalScore = h.semptomScore + h.tahlilScore;
+                
+                // Patognomonik tahlil bonusu (+30 puan)
+                if (h.patognomonikTahlil) {
+                    totalScore += 3.0;
+                }
+                
+                // Normalize (max 100)
+                const maxPossible = selectedSemptomlar.length + selectedTahliller.length + (h.patognomonikTahlil ? 3 : 0);
+                const percentage = Math.min(100, Math.round((totalScore / maxPossible) * 100));
+                
+                return {
+                    ...h,
+                    score: percentage
+                };
+            }).filter(r => r.score >= 15);
+            
+            // Skora göre sırala
+            results.sort((a, b) => b.score - a.score);
+            
+            // İlk 15
+            results = results.slice(0, 15);
+            
+            countEl.textContent = `${results.length} sonuç`;
+            
+            // Acil kontrolü (şimdilik basit)
+            const hasAcil = results.some(r => 
+                r.ad.includes('Enfarktüs') || 
+                r.ad.includes('Menenjit') || 
+                r.ad.includes('Kanama') ||
+                r.ad.includes('Sepsis')
+            );
+            acilBanner.classList.toggle('show', hasAcil && results[0]?.score >= 50);
+            
+            if (results.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">😕</div>
+                        <p>Seçilen bulgulara uygun tanı bulunamadı</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = results.map((h, i) => {
+                const icd10 = ICD10_CODES[h.ad] || 'N/A';
+                const scoreClass = h.score >= 70 ? 'high' : h.score >= 40 ? 'medium' : 'low';
+                const isAcil = h.ad.includes('Enfarktüs') || h.ad.includes('Menenjit') || h.ad.includes('Kanama') || h.ad.includes('Sepsis');
+                
+                // Bu hastalığa ait tüm bulgular
+                const bulgular = getHastalikBulgulari(h.ad);
+                
+                return `
+                    <div class="hastalik-card ${isAcil ? 'acil' : ''}" id="card-${i}">
+                        <div class="hastalik-header" onclick="toggleCard(${i})">
+                            <div class="hastalik-info">
+                                <div class="hastalik-name">
+                                    ${isAcil ? '<span class="acil-badge">🚨 ACİL</span>' : ''}
+                                    ${h.ad}
+                                    ${h.patognomonikTahlil ? '<span class="patog-badge">🎯 Patognomonik</span>' : ''}
+                                </div>
+                                <div class="hastalik-meta">
+                                    <span class="icd-code">${icd10}</span>
+                                    <span>📊 ${bulgular.semptomlar.filter(b => b.selected).length}/${bulgular.semptomlar.length} semptom, ${bulgular.tahliller.filter(b => b.selected).length}/${bulgular.tahliller.length} tahlil</span>
+                                </div>
+                            </div>
+                            <div class="hastalik-score ${scoreClass}">%${h.score}</div>
+                        </div>
+                        <div class="hastalik-content" id="content-${i}">
+                            ${bulgular.semptomlar.length > 0 ? `
+                            <div class="detail-section">
+                                <div class="detail-title">🩺 İlişkili Semptomlar</div>
+                                <div class="bulgu-list">
+                                    ${bulgular.semptomlar.map(b => `
+                                        <span class="bulgu-item ${b.selected ? 'selected' : 'missing'} ${b.patognomonik ? 'patog' : ''}">
+                                            <span class="bulgu-icon">${b.selected ? '✓' : '✗'}</span>
+                                            ${b.ad}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            ${bulgular.tahliller.length > 0 ? `
+                            <div class="detail-section">
+                                <div class="detail-title">🔬 İlişkili Tahliller</div>
+                                <div class="bulgu-list">
+                                    ${bulgular.tahliller.map(b => `
+                                        <span class="bulgu-item ${b.selected ? 'selected' : 'missing'} ${b.patognomonik ? 'patog' : ''}">
+                                            <span class="bulgu-icon">${b.selected ? '✓' : '✗'}</span>
+                                            ${b.ad}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Kart Toggle
+        function toggleCard(index) {
+            const content = document.getElementById(`content-${index}`);
+            content.classList.toggle('open');
+        }
+        
+        // Kayıt Modal
+        function showKayitModal() {
+            document.getElementById('kayitModal').classList.add('show');
+            renderKayitlar();
+        }
+        
+        function hideKayitModal() {
+            document.getElementById('kayitModal').classList.remove('show');
+        }
+        
+        // Mevcut Hastayı Kaydet
+        function saveCurrentPatient() {
+            const ad = document.getElementById('hastaAdiInput').value || 'İsimsiz Hasta';
+            const yas = document.getElementById('yasInput').value || '-';
+            const cinsiyet = document.getElementById('cinsiyetSelect').value || '-';
+            
+            if (selectedSemptomlar.length === 0 && selectedTahliller.length === 0) {
+                alert('Kaydetmek için en az bir semptom veya tahlil seçin');
+                return;
+            }
+            
+            const kayit = {
+                id: Date.now(),
+                ad: ad,
+                yas: yas,
+                cinsiyet: cinsiyet,
+                semptomlar: selectedSemptomlar.map(s => s.ad),
+                tahliller: selectedTahliller.map(t => t.ad),
+                tarih: new Date().toLocaleDateString('tr-TR')
+            };
+            
+            savedPatients.unshift(kayit);
+            localStorage.setItem('hastaKayitlari', JSON.stringify(savedPatients));
+            renderKayitlar();
+            alert('Hasta kaydedildi!');
+        }
+        
+        // Kayıtları Render Et
+        function renderKayitlar() {
+            const container = document.getElementById('kayitList');
+            
+            if (savedPatients.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Henüz kayıt yok</p></div>';
+                return;
+            }
+            
+            container.innerHTML = savedPatients.map(k => `
+                <div class="kayit-item">
+                    <div class="kayit-info">
+                        <h4>${k.ad}</h4>
+                        <p>${k.yas} yaş, ${k.cinsiyet} - ${k.tarih}</p>
+                        <p style="font-size:11px;color:#666">
+                            ${k.semptomlar ? k.semptomlar.slice(0,2).join(', ') : ''}
+                            ${k.tahliller && k.tahliller.length > 0 ? ' | 🔬' + k.tahliller.slice(0,2).join(', ') : ''}
+                        </p>
+                    </div>
+                    <div class="kayit-actions">
+                        <button class="kayit-btn" onclick="loadKayit(${k.id})">📂 Yükle</button>
+                        <button class="kayit-btn" onclick="deleteKayit(${k.id})">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Kayıt Yükle
+        function loadKayit(id) {
+            const kayit = savedPatients.find(k => k.id === id);
+            if (!kayit) return;
+            
+            document.getElementById('hastaAdiInput').value = kayit.ad;
+            document.getElementById('yasInput').value = kayit.yas !== '-' ? kayit.yas : '';
+            document.getElementById('cinsiyetSelect').value = kayit.cinsiyet !== '-' ? kayit.cinsiyet : '';
+            
+            // Semptomları yükle
+            selectedSemptomlar = [];
+            if (kayit.semptomlar) {
+                kayit.semptomlar.forEach(semptomAd => {
+                    const s = ttr.semptomlar.find(sem => sem.ad === semptomAd);
+                    if (s) selectedSemptomlar.push(s);
+                });
+            }
+            
+            // Tahlilleri yükle
+            selectedTahliller = [];
+            if (kayit.tahliller) {
+                kayit.tahliller.forEach(tahlilAd => {
+                    const t = ttr.tahliller.find(tah => tah.ad === tahlilAd);
+                    if (t) selectedTahliller.push(t);
+                });
+            }
+            
+            updateChips();
+            renderSemptomlar();
+            renderTahliller();
+            updateResults();
+            hideKayitModal();
+        }
+        
+        // Kayıt Sil
+        function deleteKayit(id) {
+            if (!confirm('Bu kaydı silmek istediğinize emin misiniz?')) return;
+            savedPatients = savedPatients.filter(k => k.id !== id);
+            localStorage.setItem('hastaKayitlari', JSON.stringify(savedPatients));
+            renderKayitlar();
+        }
+        
+        // Yazdır
+        function printResults() {
+            window.print();
+        }
+        
+        // Sıfırla
+        function resetAll() {
+            if (!confirm('Tüm seçimleri sıfırlamak istediğinize emin misiniz?')) return;
+            selectedSemptomlar = [];
+            selectedTahliller = [];
+            document.getElementById('yasInput').value = '';
+            document.getElementById('cinsiyetSelect').value = '';
+            document.getElementById('hastaAdiInput').value = '';
+            document.getElementById('semptomSearch').value = '';
+            document.getElementById('tahlilSearch').value = '';
+            currentBodyRegion = 'all';
+            currentTahlilKategori = 'all';
+            document.querySelectorAll('#bodyRegions .body-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('#bodyRegions .body-btn[data-region="all"]').classList.add('active');
+            document.querySelectorAll('#tahlilRegions .body-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('#tahlilRegions .body-btn[data-region="all"]').classList.add('active');
+            updateChips();
+            renderSemptomlar();
+            renderTahliller();
+            updateResults();
+        }
+    </script>
+</body>
+</html>
