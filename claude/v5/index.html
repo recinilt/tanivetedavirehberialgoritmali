@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>1. Basamak Tanı Rehberi</title>
+    <script src="hastaliklar.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --warning: #f59e0b;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-900);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 0;
+            background: white;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Tab Sistemi */
+        .tab-container {
+            display: flex;
+            border-bottom: 2px solid var(--gray-200);
+            background: white;
+            position: sticky;
+            top: 56px;
+            z-index: 99;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-500);
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary);
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 16px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Seçilen Semptomlar */
+        .section {
+            margin-bottom: 16px;
+        }
+        
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-500);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-height: 36px;
+            padding: 8px;
+            background: var(--gray-50);
+            border-radius: 8px;
+        }
+        
+        .chip {
+            background: var(--primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: chipIn 0.2s ease;
+        }
+        
+        @keyframes chipIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .chip-remove {
+            background: rgba(255,255,255,0.3);
+            border: none;
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+        }
+        
+        .empty-chips {
+            color: var(--gray-500);
+            font-size: 13px;
+            font-style: italic;
+        }
+        
+        /* Arama */
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            border: 1px solid var(--gray-300);
+            border-radius: 10px;
+            font-size: 15px;
+            background: white;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+        }
+        
+        /* Kategori Filtreleri */
+        .kategori-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .kategori-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 20px;
+            background: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        
+        .kategori-btn:hover {
+            border-color: var(--primary);
+        }
+        
+        .kategori-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Semptom Listesi */
+        .semptom-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+        }
+        
+        .semptom-item {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--gray-100);
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            transition: background 0.15s;
+        }
+        
+        .semptom-item:hover {
+            background: var(--gray-50);
+        }
+        
+        .semptom-item.selected {
+            background: var(--success-bg);
+        }
+        
+        .semptom-item:last-child {
+            border-bottom: none;
+        }
+        
+        .semptom-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray-300);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .semptom-item.selected .semptom-checkbox {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        
+        .semptom-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .semptom-name {
+            font-size: 14px;
+            color: var(--gray-900);
+        }
+        
+        .semptom-synonyms {
+            font-size: 11px;
+            color: var(--gray-500);
+            margin-top: 2px;
+            font-style: italic;
+        }
+        
+        .semptom-category {
+            font-size: 11px;
+            color: var(--gray-500);
+            background: var(--gray-100);
+            padding: 2px 6px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        
+        /* Sonuçlar */
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .results-count {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+        
+        .reset-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            background: white;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        /* Hastalık Kartları */
+        .hastalik-card {
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .hastalik-header {
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            gap: 12px;
+        }
+        
+        .hastalik-header:hover {
+            background: var(--gray-50);
+        }
+        
+        .hastalik-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--gray-900);
+        }
+        
+        .hastalik-synonyms {
+            font-size: 11px;
+            color: var(--gray-500);
+            margin-top: 2px;
+            font-style: italic;
+        }
+        
+        .hastalik-meta {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 4px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .icd-code {
+            background: var(--gray-100);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        .hastalik-score {
+            font-weight: 700;
+            font-size: 16px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        
+        .hastalik-score.high {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .hastalik-score.medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .hastalik-score.low {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+        
+        .hastalik-content {
+            display: none;
+            padding: 12px;
+            border-top: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+        
+        .hastalik-content.open {
+            display: block;
+        }
+        
+        .detail-section {
+            margin-bottom: 12px;
+        }
+        
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+        
+        .bulgu-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .bulgu-item {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: white;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .bulgu-item.selected {
+            background: var(--success-bg);
+            border-color: var(--success);
+            color: var(--success);
+        }
+        
+        .bulgu-item.missing {
+            color: var(--gray-500);
+        }
+        
+        .ayirici-list, .tetkik-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .ayirici-item {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .tetkik-item {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        /* Grup Başlıkları */
+        .grup-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-500);
+            padding: 12px 0 8px;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-500);
+        }
+        
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🩺 1. Basamak Tanı Rehberi</h1>
+        </header>
+        
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('semptom')">
+                🔍 Semptom Ara
+            </button>
+            <button class="tab-btn" onclick="switchTab('hastalik')">
+                📋 Hastalıklar
+            </button>
+        </div>
+        
+        <!-- Semptom Arama Tab -->
+        <div id="semptomTab" class="tab-content active">
+            <div class="section">
+                <div class="section-title">Seçilen Semptomlar</div>
+                <div id="selectedChips" class="chips-container">
+                    <span class="empty-chips">Semptom seçin...</span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="search-box">
+                    <input type="text" id="semptomSearch" placeholder="Semptom ara... (sinonimler dahil)" oninput="renderSemptomList()">
+                </div>
+                
+                <div id="kategoriFilters" class="kategori-container"></div>
+                
+                <div id="semptomList" class="semptom-list"></div>
+            </div>
+            
+            <div id="resultsSection" class="section" style="display: none;">
+                <div class="results-header">
+                    <div class="section-title">Olası Tanılar (<span id="resultCount">0</span>)</div>
+                    <button class="reset-btn" onclick="resetAll()">🔄 Sıfırla</button>
+                </div>
+                <div id="resultsList"></div>
+            </div>
+        </div>
+        
+        <!-- Hastalık Listesi Tab -->
+        <div id="hastalikTab" class="tab-content">
+            <div class="search-box">
+                <input type="text" id="hastalikSearch" placeholder="Hastalık, ICD kodu veya sinonim ara..." oninput="renderHastalikList()">
+            </div>
+            <div id="hastalikList"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Global değişkenler
+        let selectedSemptomlar = [];
+        let activeKategori = 'Tümü';
+        
+        // Yardımcı fonksiyonlar - Semptom ID'den semptom objesi al
+        function getSemptomById(id) {
+            return hastaliklar.symptoms.find(s => s.id === id);
+        }
+        
+        // Hastalık ID'den hastalık adı al
+        function getHastalikAdiById(id) {
+            const h = hastaliklar.diseases.find(d => d.id === id);
+            return h ? h.name : null;
+        }
+        
+        // Ayırıcı tanıları çözümle
+        function resolveAyiriciTani(diffList) {
+            if (!diffList || diffList.length === 0) return [];
+            return diffList.map(d => {
+                if (d.type === 'disease_id') {
+                    return getHastalikAdiById(d.value) || `Hastalık #${d.value}`;
+                } else {
+                    return d.value;
+                }
+            });
+        }
+        
+        // Tüm kategorileri al
+        function getKategoriler() {
+            const kategoriler = new Set();
+            hastaliklar.symptoms.forEach(s => {
+                if (s.category) kategoriler.add(s.category);
+            });
+            return ['Tümü', ...Array.from(kategoriler).sort((a, b) => a.localeCompare(b, 'tr'))];
+        }
+        
+        // Hastalıkları kategoriye göre grupla
+        function getHastalikKategorisi(disease) {
+            // İlk semptomun kategorisini kullan
+            if (disease.symptom_ids && disease.symptom_ids.length > 0) {
+                const firstSymptom = getSemptomById(disease.symptom_ids[0]);
+                if (firstSymptom && firstSymptom.category) {
+                    return firstSymptom.category;
+                }
+            }
+            return 'Diğer';
+        }
+        
+        // Tab Değiştir
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tab === 'semptom') {
+                document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+                document.getElementById('semptomTab').classList.add('active');
+            } else {
+                document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+                document.getElementById('hastalikTab').classList.add('active');
+                renderHastalikList();
+            }
+        }
+        
+        // Kategori Butonları Render
+        function renderKategoriler() {
+            const container = document.getElementById('kategoriFilters');
+            const kategoriler = getKategoriler();
+            
+            container.innerHTML = kategoriler.map(k => `
+                <button class="kategori-btn ${k === activeKategori ? 'active' : ''}" 
+                        onclick="filterKategori('${k}')">
+                    ${k}
+                </button>
+            `).join('');
+        }
+        
+        // Kategori Filtrele
+        function filterKategori(kategori) {
+            activeKategori = kategori;
+            renderKategoriler();
+            renderSemptomList();
+        }
+        
+        // Semptom Listesi Render
+        function renderSemptomList() {
+            const search = document.getElementById('semptomSearch').value.toLowerCase().trim();
+            const container = document.getElementById('semptomList');
+            
+            let filtered = hastaliklar.symptoms;
+            
+            // Kategori filtresi
+            if (activeKategori !== 'Tümü') {
+                filtered = filtered.filter(s => s.category === activeKategori);
+            }
+            
+            // Arama filtresi (ana ad + sinonimler)
+            if (search) {
+                filtered = filtered.filter(s => {
+                    const mainMatch = s.original_text.toLowerCase().includes(search);
+                    const synonymMatch = s.synonyms && s.synonyms.some(syn => 
+                        syn.toLowerCase().includes(search)
+                    );
+                    return mainMatch || synonymMatch;
+                });
+            }
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Semptom bulunamadı</p></div>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map(s => {
+                const isSelected = selectedSemptomlar.some(sel => sel.id === s.id);
+                const synonymsText = s.synonyms && s.synonyms.length > 0 
+                    ? s.synonyms.join(', ') 
+                    : '';
+                
+                return `
+                    <div class="semptom-item ${isSelected ? 'selected' : ''}" 
+                         onclick="toggleSemptom(${s.id})">
+                        <div class="semptom-checkbox">${isSelected ? '✓' : ''}</div>
+                        <div class="semptom-info">
+                            <div class="semptom-name">${s.original_text}</div>
+                            ${synonymsText ? `<div class="semptom-synonyms">${synonymsText}</div>` : ''}
+                        </div>
+                        <span class="semptom-category">${s.category || ''}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Semptom Toggle
+        function toggleSemptom(id) {
+            const semptom = getSemptomById(id);
+            if (!semptom) return;
+            
+            const index = selectedSemptomlar.findIndex(s => s.id === id);
+            if (index > -1) {
+                selectedSemptomlar.splice(index, 1);
+            } else {
+                selectedSemptomlar.push({
+                    id: semptom.id,
+                    ad: semptom.original_text
+                });
+            }
+            
+            updateChips();
+            renderSemptomList();
+            updateResults();
+        }
+        
+        // Semptom Kaldır
+        function removeSemptom(id) {
+            selectedSemptomlar = selectedSemptomlar.filter(s => s.id !== id);
+            updateChips();
+            renderSemptomList();
+            updateResults();
+        }
+        
+        // Chips Güncelle
+        function updateChips() {
+            const container = document.getElementById('selectedChips');
+            if (selectedSemptomlar.length === 0) {
+                container.innerHTML = '<span class="empty-chips">Semptom seçin...</span>';
+                return;
+            }
+            
+            container.innerHTML = selectedSemptomlar.map(s => `
+                <span class="chip">
+                    ${s.ad}
+                    <button class="chip-remove" onclick="removeSemptom(${s.id})">×</button>
+                </span>
+            `).join('');
+        }
+        
+        // Sonuçları Güncelle
+        function updateResults() {
+            const section = document.getElementById('resultsSection');
+            const container = document.getElementById('resultsList');
+            const countEl = document.getElementById('resultCount');
+            
+            if (selectedSemptomlar.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            
+            // Hastalıkları skorla
+            const results = [];
+            const selectedIds = selectedSemptomlar.map(s => s.id);
+            
+            hastaliklar.diseases.forEach(h => {
+                const hastalikSemptomIds = h.symptom_ids || [];
+                const matchCount = selectedIds.filter(id => hastalikSemptomIds.includes(id)).length;
+                
+                if (matchCount > 0) {
+                    const score = Math.round((matchCount / hastalikSemptomIds.length) * 100);
+                    results.push({
+                        ...h,
+                        matchCount,
+                        score
+                    });
+                }
+            });
+            
+            // Skora göre sırala
+            results.sort((a, b) => b.score - a.score || b.matchCount - a.matchCount);
+            
+            countEl.textContent = results.length;
+            
+            if (results.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">😕</div>
+                        <p>Seçilen semptomlara uygun tanı bulunamadı</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = results.map((h, i) => {
+                const scoreClass = h.score >= 70 ? 'high' : h.score >= 40 ? 'medium' : 'low';
+                const selectedIds = selectedSemptomlar.map(s => s.id);
+                const semptomlar = (h.symptom_ids || []).map(id => getSemptomById(id)).filter(Boolean);
+                const ayiriciTanilar = resolveAyiriciTani(h.differential_diagnosis);
+                const tetkikler = h.tests || [];
+                const synonymsText = h.synonyms && h.synonyms.length > 0 ? h.synonyms.join(', ') : '';
+                
+                return `
+                    <div class="hastalik-card">
+                        <div class="hastalik-header" onclick="toggleCard('result-${i}')">
+                            <div>
+                                <div class="hastalik-name">${h.name}</div>
+                                ${synonymsText ? `<div class="hastalik-synonyms">${synonymsText}</div>` : ''}
+                                <div class="hastalik-meta">
+                                    <span class="icd-code">${h.icd10}</span>
+                                    <span>📊 ${h.matchCount}/${semptomlar.length} semptom eşleşti</span>
+                                </div>
+                            </div>
+                            <div class="hastalik-score ${scoreClass}">%${h.score}</div>
+                        </div>
+                        <div id="result-${i}" class="hastalik-content">
+                            <div class="detail-section">
+                                <div class="detail-title">🩺 İlişkili Semptomlar</div>
+                                <div class="bulgu-list">
+                                    ${semptomlar.map(s => `
+                                        <span class="bulgu-item ${selectedIds.includes(s.id) ? 'selected' : 'missing'}">
+                                            ${selectedIds.includes(s.id) ? '✓' : '○'} ${s.original_text}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            ${ayiriciTanilar.length > 0 ? `
+                            <div class="detail-section">
+                                <div class="detail-title">⚠️ Ayırıcı Tanı</div>
+                                <div class="ayirici-list">
+                                    ${ayiriciTanilar.map(a => `<span class="ayirici-item">${a}</span>`).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            ${tetkikler.length > 0 ? `
+                            <div class="detail-section">
+                                <div class="detail-title">🔬 İstenen Tetkikler</div>
+                                <div class="tetkik-list">
+                                    ${tetkikler.map(t => `<span class="tetkik-item">${t}</span>`).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Hastalık Listesini Render Et
+        function renderHastalikList() {
+            const search = document.getElementById('hastalikSearch').value.toLowerCase().trim();
+            const container = document.getElementById('hastalikList');
+            
+            let filtered = hastaliklar.diseases;
+            if (search) {
+                filtered = hastaliklar.diseases.filter(h => {
+                    const nameMatch = h.name.toLowerCase().includes(search);
+                    const icdMatch = h.icd10.toLowerCase().includes(search);
+                    const synonymMatch = h.synonyms && h.synonyms.some(syn => 
+                        syn.toLowerCase().includes(search)
+                    );
+                    return nameMatch || icdMatch || synonymMatch;
+                });
+            }
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Hastalık bulunamadı</p></div>';
+                return;
+            }
+            
+            // Kategoriye göre grupla
+            const grouped = {};
+            filtered.forEach(h => {
+                const kategori = getHastalikKategorisi(h);
+                if (!grouped[kategori]) grouped[kategori] = [];
+                grouped[kategori].push(h);
+            });
+            
+            let html = '';
+            Object.keys(grouped).sort((a, b) => a.localeCompare(b, 'tr')).forEach(kategori => {
+                html += `<div class="grup-title">${kategori}</div>`;
+                grouped[kategori].forEach((h, i) => {
+                    const cardId = `hastalik-${h.id}`;
+                    const semptomlar = (h.symptom_ids || []).map(id => getSemptomById(id)).filter(Boolean);
+                    const ayiriciTanilar = resolveAyiriciTani(h.differential_diagnosis);
+                    const tetkikler = h.tests || [];
+                    const synonymsText = h.synonyms && h.synonyms.length > 0 ? h.synonyms.join(', ') : '';
+                    
+                    html += `
+                        <div class="hastalik-card">
+                            <div class="hastalik-header" onclick="toggleCard('${cardId}')">
+                                <div>
+                                    <div class="hastalik-name">${h.name}</div>
+                                    ${synonymsText ? `<div class="hastalik-synonyms">${synonymsText}</div>` : ''}
+                                    <div class="hastalik-meta">
+                                        <span class="icd-code">${h.icd10}</span>
+                                        <span>${semptomlar.length} semptom</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="${cardId}" class="hastalik-content">
+                                <div class="detail-section">
+                                    <div class="detail-title">🩺 Semptomlar</div>
+                                    <div class="bulgu-list">
+                                        ${semptomlar.map(s => `<span class="bulgu-item missing">○ ${s.original_text}</span>`).join('')}
+                                    </div>
+                                </div>
+                                
+                                ${ayiriciTanilar.length > 0 ? `
+                                <div class="detail-section">
+                                    <div class="detail-title">⚠️ Ayırıcı Tanı</div>
+                                    <div class="ayirici-list">
+                                        ${ayiriciTanilar.map(a => `<span class="ayirici-item">${a}</span>`).join('')}
+                                    </div>
+                                </div>
+                                ` : ''}
+                                
+                                ${tetkikler.length > 0 ? `
+                                <div class="detail-section">
+                                    <div class="detail-title">🔬 İstenen Tetkikler</div>
+                                    <div class="tetkik-list">
+                                        ${tetkikler.map(t => `<span class="tetkik-item">${t}</span>`).join('')}
+                                    </div>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Kart Toggle
+        function toggleCard(id) {
+            const content = document.getElementById(id);
+            if (content) {
+                content.classList.toggle('open');
+            }
+        }
+        
+        // Sıfırla
+        function resetAll() {
+            selectedSemptomlar = [];
+            activeKategori = 'Tümü';
+            document.getElementById('semptomSearch').value = '';
+            updateChips();
+            renderKategoriler();
+            renderSemptomList();
+            updateResults();
+        }
+        
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            renderKategoriler();
+            renderSemptomList();
+        });
+    </script>
+</body>
+</html>
