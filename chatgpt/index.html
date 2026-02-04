@@ -352,13 +352,6 @@
             color: var(--gray-900);
         }
         
-        .hastalik-synonyms {
-            font-size: 11px;
-            color: var(--gray-500);
-            margin-top: 2px;
-            font-style: italic;
-        }
-        
         .hastalik-meta {
             font-size: 12px;
             color: var(--gray-500);
@@ -541,7 +534,7 @@
         <!-- Hastalık Listesi Tab -->
         <div id="hastalikTab" class="tab-content">
             <div class="search-box">
-                <input type="text" id="hastalikSearch" placeholder="Hastalık, ICD kodu veya sinonim ara..." oninput="renderHastalikList()">
+                <input type="text" id="hastalikSearch" placeholder="Hastalık veya ICD kodu ara..." oninput="renderHastalikList()">
             </div>
             <div id="hastalikList"></div>
         </div>
@@ -775,14 +768,12 @@
                 const semptomlar = (h.symptom_ids || []).map(id => getSemptomById(id)).filter(Boolean);
                 const ayiriciTanilar = resolveAyiriciTani(h.differential_diagnosis);
                 const tetkikler = h.tests || [];
-                const synonymsText = h.synonyms && h.synonyms.length > 0 ? h.synonyms.join(', ') : '';
                 
                 return `
                     <div class="hastalik-card">
                         <div class="hastalik-header" onclick="toggleCard('result-${i}')">
                             <div>
                                 <div class="hastalik-name">${h.name}</div>
-                                ${synonymsText ? `<div class="hastalik-synonyms">${synonymsText}</div>` : ''}
                                 <div class="hastalik-meta">
                                     <span class="icd-code">${h.icd10}</span>
                                     <span>📊 ${h.matchCount}/${semptomlar.length} semptom eşleşti</span>
@@ -832,14 +823,10 @@
             
             let filtered = hastaliklar.diseases;
             if (search) {
-                filtered = hastaliklar.diseases.filter(h => {
-                    const nameMatch = h.name.toLowerCase().includes(search);
-                    const icdMatch = h.icd10.toLowerCase().includes(search);
-                    const synonymMatch = h.synonyms && h.synonyms.some(syn => 
-                        syn.toLowerCase().includes(search)
-                    );
-                    return nameMatch || icdMatch || synonymMatch;
-                });
+                filtered = hastaliklar.diseases.filter(h => 
+                    h.name.toLowerCase().includes(search) ||
+                    h.icd10.toLowerCase().includes(search)
+                );
             }
             
             if (filtered.length === 0) {
@@ -863,14 +850,12 @@
                     const semptomlar = (h.symptom_ids || []).map(id => getSemptomById(id)).filter(Boolean);
                     const ayiriciTanilar = resolveAyiriciTani(h.differential_diagnosis);
                     const tetkikler = h.tests || [];
-                    const synonymsText = h.synonyms && h.synonyms.length > 0 ? h.synonyms.join(', ') : '';
                     
                     html += `
                         <div class="hastalik-card">
                             <div class="hastalik-header" onclick="toggleCard('${cardId}')">
                                 <div>
                                     <div class="hastalik-name">${h.name}</div>
-                                    ${synonymsText ? `<div class="hastalik-synonyms">${synonymsText}</div>` : ''}
                                     <div class="hastalik-meta">
                                         <span class="icd-code">${h.icd10}</span>
                                         <span>${semptomlar.length} semptom</span>
